@@ -69,7 +69,7 @@ namespace LibRobotAuto
                     }
                 }
             }
-            Trace.TraceInformation("报表已经发送，准备关机！");
+            Trace.TraceInformation("报表已经发送，准备关机！！");
             RobotInterface robotInterface = RobotInterface.GetInstance();
             int ret = robotInterface.ConnectRobot();
             if (ret != 0)
