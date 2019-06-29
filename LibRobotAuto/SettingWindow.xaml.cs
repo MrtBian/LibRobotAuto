@@ -31,10 +31,10 @@ namespace LibRobotAuto
 
             List<CategoryInfo> categoryList = new List<CategoryInfo>();
 
-            categoryList.Add(new CategoryInfo { Name = "A栋二楼", Value = "A2" });
-            categoryList.Add(new CategoryInfo { Name = "A栋三楼", Value = "A3" });
-            categoryList.Add(new CategoryInfo { Name = "A栋四楼", Value = "A4" });
-            categoryList.Add(new CategoryInfo { Name = "A栋五楼", Value = "A5" });
+            //categoryList.Add(new CategoryInfo { Name = "A栋二楼", Value = "A2" });
+            //categoryList.Add(new CategoryInfo { Name = "A栋三楼", Value = "A3" });
+            categoryList.Add(new CategoryInfo { Name = "四楼", Value = "A4" });
+            //categoryList.Add(new CategoryInfo { Name = "A栋五楼", Value = "A5" });
             CheckBox_Auto.IsChecked = UserConfig.AutoRunning;
 
             ComboBox_Floor.ItemsSource = categoryList;

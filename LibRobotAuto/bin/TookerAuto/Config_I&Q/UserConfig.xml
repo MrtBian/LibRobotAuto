@@ -37,6 +37,6 @@
     <StartNewInventory>True</StartNewInventory>
     <InventoryDatafileDirectory>A5_2019-01-06_16-17-12_full</InventoryDatafileDirectory>
     <AutoScanTime>22-15</AutoScanTime>
-    <AutoScan>false</AutoScan>
+    <AutoScan>False</AutoScan>
   </OtherConfig>
 </UserConfig>

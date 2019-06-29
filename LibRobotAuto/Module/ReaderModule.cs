@@ -117,6 +117,64 @@ namespace LibRobotAuto.Module
             impinjReader.ApplySettings(settings);
         }
 
+        //重载  用于解决不开所有天线端口的情况
+        public void ConfigSettings(string hostname,bool[] port)
+        {
+            Settings settings = impinjReader.QueryDefaultSettings();
+
+            // 常规
+            settings.Report.IncludePeakRssi = true;
+            settings.Report.IncludePhaseAngle = false;
+            settings.Report.IncludeFirstSeenTime = true;
+            settings.Report.IncludeFastId = false;
+            settings.Report.IncludeAntennaPortNumber = true;
+            //settings.Report.IncludeChannel = true;
+            settings.Report.Mode = ReportMode.Individual;
+
+            settings.ReaderMode = ReaderMode.MaxThroughput;
+            settings.SearchMode = SearchMode.DualTarget;
+            settings.TagPopulationEstimate = 128;
+            settings.Session = 1;
+
+            if (hostname.Equals(UserConfig.UpperReaderHostname))
+            {
+                //settings.TxFrequenciesInMhz.Add(920.625);
+                //settings.TxFrequenciesInMhz.Add(920.875);
+                //settings.TxFrequenciesInMhz.Add(921.125);
+                //settings.TxFrequenciesInMhz.Add(921.375);
+                settings.TxFrequenciesInMhz.Add(921.625);
+                //settings.TxFrequenciesInMhz.Add(921.875);
+            }
+            else
+            {
+                //settings.TxFrequenciesInMhz.Add(920.625);
+                //settings.TxFrequenciesInMhz.Add(923.125);
+                //settings.TxFrequenciesInMhz.Add(923.375);
+                settings.TxFrequenciesInMhz.Add(923.625);
+                //settings.TxFrequenciesInMhz.Add(923.875);
+                //settings.TxFrequenciesInMhz.Add(924.125);
+                //settings.TxFrequenciesInMhz.Add(924.375);
+            }
+
+            // 天线
+            List<ushort> antennaPorts = new List<ushort>();
+            for (int i=0;i<4;i++)
+            {
+                if (port[i])
+                    antennaPorts.Add((ushort)(i+1));
+            }
+            //antennaPorts.Add(2);
+            //settings.Antennas.EnableAll();
+            //settings.Antennas.DisableAll();
+            settings.Antennas.EnableById(antennaPorts);
+
+            settings.Antennas.TxPowerInDbm = UserConfig.MaxPower;
+            settings.Antennas.RxSensitivityMax = true;
+
+            settings.Save("Config_I&Q\\ReaderSettings.json");
+            impinjReader.ApplySettings(settings);
+        }
+
         public void ClearTags()
         {
             tags.Clear();
