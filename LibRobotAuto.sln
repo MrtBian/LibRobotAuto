@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibRobotAuto", "LibRobotAuto\LibRobotAuto.csproj", "{6112CC95-42A6-4FAD-9453-1FB80FD89B6A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		TookerAuto|Any CPU = TookerAuto|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6112CC95-42A6-4FAD-9453-1FB80FD89B6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6112CC95-42A6-4FAD-9453-1FB80FD89B6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6112CC95-42A6-4FAD-9453-1FB80FD89B6A}.TookerAuto|Any CPU.ActiveCfg = TookerAuto|Any CPU
+		{6112CC95-42A6-4FAD-9453-1FB80FD89B6A}.TookerAuto|Any CPU.Build.0 = TookerAuto|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E866F5D4-8F46-42C4-9883-FA8BEF29C674}
+	EndGlobalSection
+EndGlobal

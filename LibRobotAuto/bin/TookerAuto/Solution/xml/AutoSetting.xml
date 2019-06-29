@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Configure>
+  <isAutoTest>false</isAutoTest>
+  <MovetoPos1>
+    <x>1.0</x>
+    <y>1.0</y>
+    <angle>1.0</angle>
+  </MovetoPos1>
+  <MovetoPos2>
+    <x>1.0</x>
+    <y>1.0</y>
+    <angle>1.0</angle>
+  </MovetoPos2>
+  
+  <shelfScan1>
+    <startX>1.0</startX>
+    <startY>1.0</startY>
+    <startAngle>1.0</startAngle>
+    <endX>1.0</endX>
+    <endY>1.0</endY>
+    <endAngle>1.0</endAngle>
+    <Num1PillarHeight>1</Num1PillarHeight>
+    <Num2PillarHeight>1</Num2PillarHeight>
+    <distance>1</distance>
+  
+</shelfScan1>
+  
+  <shelfScan2>
+    <startX>1.0</startX>
+    <startY>1.0</startY>
+    <startAngle>1.0</startAngle>
+    <endX>1.0</endX>
+    <endY>1.0</endY>
+    <endAngle>1.0</endAngle>
+    <Num1PillarHeight>2</Num1PillarHeight>
+    <Num2PillarHeight>2</Num2PillarHeight>
+    <distance>2</distance>
+  </shelfScan2>
+</Configure>

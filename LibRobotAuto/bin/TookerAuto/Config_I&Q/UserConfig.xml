@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserConfig>
+  <DatabaseConfig>
+    <Server>114.212.80.13</Server>
+    <Database>MiniLibrary</Database>
+    <Uid>sa</Uid>
+    <Pwd>NetLab624</Pwd>
+  </DatabaseConfig>
+  <ReaderConfig>
+    <UpperReaderHostname>192.168.2.230</UpperReaderHostname>
+    <BottomReaderHostname>192.168.2.231</BottomReaderHostname>
+    <MaxPower>32.5</MaxPower>
+    <NormalPower>28</NormalPower>
+    <MinPower>23</MinPower>
+    <UpperReaderEnable>True</UpperReaderEnable>
+    <BottomReaderEnable>True</BottomReaderEnable>
+  </ReaderConfig>
+  <ShelfConfig>
+    <LayerCount>6</LayerCount>
+    <LifterHeightOffset>0</LifterHeightOffset>
+    <BottomLifterBaseHeight>65</BottomLifterBaseHeight>
+    <UpperLifterBaseHeight>1050</UpperLifterBaseHeight>
+    <FirstLayerRelativeHeight>100</FirstLayerRelativeHeight>
+    <SecondLayerRelativeHeight>430</SecondLayerRelativeHeight>
+    <ThirdLayerRelativeHeight>750</ThirdLayerRelativeHeight>
+    <FourthLayerRelativeHeight>100</FourthLayerRelativeHeight>
+    <FifthLayerRelativeHeight>430</FifthLayerRelativeHeight>
+    <SixthLayerRelativeHeight>740</SixthLayerRelativeHeight>
+    <DistanceToBookshelf>40</DistanceToBookshelf>
+  </ShelfConfig>
+  <OtherConfig>
+    <FloorDefaultSelectedIndex>3</FloorDefaultSelectedIndex>
+    <SchoolCode>WHU</SchoolCode>
+    <RobotNumber>1</RobotNumber>
+    <ChargingTime>60</ChargingTime>
+    <UploadDataToClound>True</UploadDataToClound>
+    <StartNewInventory>True</StartNewInventory>
+    <InventoryDatafileDirectory>A5_2019-01-06_16-17-12_full</InventoryDatafileDirectory>
+    <AutoScanTime>22-15</AutoScanTime>
+    <AutoScan>false</AutoScan>
+  </OtherConfig>
+</UserConfig>

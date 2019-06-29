@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="LibRobotAuto.ScanWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LibRobotAuto"
+             mc:Ignorable="d" 
+             d:DesignHeight="768" d:DesignWidth="768">
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="Resource/background_tile.png"/>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="8*"/>
+            <RowDefinition Height="45*"/>
+            <RowDefinition Height="10*"/>
+        </Grid.RowDefinitions>
+        <Image x:Name="title" Margin="20,20,20,10" Source="Resource/位置条.png" Stretch="Fill"/>
+        <!--<Image x:Name="book" Margin="200,60,200,63" Grid.Row="1" Source="Resource/书本图标.png" Stretch="Fill"/>-->
+        <Button x:Name="book" Content="" Margin="200,60,200,60" Grid.Row="1" BorderThickness="0" Click="book_Click" Template="{DynamicResource ButtonControlTemplate}">
+            <Button.Background>
+                <ImageBrush ImageSource="Resource/书本图标.png"/>
+            </Button.Background>
+        </Button>
+
+        <Grid Margin="0,0,0,0" Grid.Row="2">
+            <!--<Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>-->
+            <Button x:Name="scan" Content="开始盘点" Margin="82,20,548,30" BorderThickness="2" BorderBrush="White" FontSize="30" Foreground="White" Click="scan_Click" Template="{DynamicResource ButtonControlTemplate}">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resource/background_tile.png" TileMode="Tile" Stretch="UniformToFill"/>
+                </Button.Background>
+            </Button>
+            <Button x:Name="timingScan" Content="定时盘点" Margin="315,20,315,30" BorderThickness="2" BorderBrush="White" FontSize="30" Foreground="White" Click="timingScan_Click" Template="{DynamicResource ButtonControlTemplate}">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resource/background_tile.png" TileMode="Tile" Stretch="UniformToFill"/>
+                </Button.Background>
+            </Button>
+            <Button x:Name="partScan" Content="局部盘点" Margin="549,20,81,30" BorderThickness="2" BorderBrush="White" FontSize="30" Foreground="White" Click="partScan_Click" Template="{DynamicResource ButtonControlTemplate}">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resource/background_tile.png" TileMode="Tile" Stretch="UniformToFill"/>
+                </Button.Background>
+            </Button>
+            <!--<Button x:Name="end" Content="结束盘点" Grid.Column="1" Margin="30,30,250,50" Click="end_Click" BorderThickness="2" BorderBrush="White" FontSize="30" Foreground="White" Background="{x:Null}" Template="{DynamicResource ButtonControlTemplate}"/>-->
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,42 @@
+﻿<Window x:Class="LibRobotAuto.PartScanWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LibRobotAuto"
+        mc:Ignorable="d"
+        Title="局部盘点" Height="300" Width="400" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Grid>
+        <TextBox Name="TextBox_Shelfs" 
+                 HorizontalAlignment="Left" 
+                 Height="109" 
+                 Width="300" 
+                 Margin="50,75,0,0" 
+                 TextWrapping="Wrap" 
+                 GotFocus="TextBox_GotFocus" 
+                 Text="请输入要盘点的书架号，如1列3排就输入103，多个书架号间用空格隔开。" 
+                 VerticalAlignment="Top" 
+                 VerticalScrollBarVisibility="Visible" 
+                 FontSize="16" 
+                 Foreground="Gray"/>
+        <Label Content="待盘点书架" 
+               HorizontalAlignment="Left" 
+               Height="32" 
+               Margin="50,29,0,0" 
+               VerticalAlignment="Top" 
+               Width="150" FontSize="20"/>
+        <Button Content="开始局部盘点" 
+                HorizontalAlignment="Left" 
+                Margin="80,208,0,0" 
+                VerticalAlignment="Top" 
+                Width="85" 
+                Height="25" 
+                Click="Button_OK_Click"/>
+        <Button Content="取消" 
+                HorizontalAlignment="Right" 
+                Margin="0,208,80,0" 
+                VerticalAlignment="Top" 
+                Width="85" Height="25" 
+                Click="Button_Cancel_Click"/>
+    </Grid>
+</Window>

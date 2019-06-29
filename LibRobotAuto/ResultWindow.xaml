@@ -1,0 +1,102 @@
+﻿<Window x:Class="LibRobotAuto.ResultWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LibRobotAuto"
+        mc:Ignorable="d"
+        Title="盘点结果信息" Height="768" Width="1024" WindowStartupLocation="CenterScreen" WindowStyle="None" Background="{x:Null}" ResizeMode="NoResize" WindowState="Maximized">
+    <Grid Margin="0,0,0,0" Width="1024" Height="768">
+        <Grid.Background>
+            <ImageBrush ImageSource="Resource/gray_bg.PNG"/>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25*"/>
+            <RowDefinition Height="300*"/>
+        </Grid.RowDefinitions>
+        <Grid Margin="0,0,0,0">
+            <Grid.Background>
+                <ImageBrush ImageSource="Resource/black_bg.PNG"/>
+            </Grid.Background>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <ComboBox x:Name="comboBox" Grid.Column="1" Margin="0,10,30,10" SelectionChanged="comboBox_SelectionChanged" FontSize="20">
+                <ComboBox.Foreground>
+                    <SolidColorBrush Color="DimGray"/>
+                </ComboBox.Foreground>
+            </ComboBox>
+            <Label x:Name="label" Content="盘点结果" Margin="30,10,30,10" Foreground="White" FontSize="20"/>
+        </Grid>
+        <Grid Margin="0,0,0,0" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="4*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Margin="0,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="280*"/>
+                    <RowDefinition Height="20*"/>
+                    <RowDefinition Height="70*"/>
+                    <RowDefinition Height="70*"/>
+                    <RowDefinition Height="70*"/>
+                    <RowDefinition Height="70*"/>
+                    <RowDefinition Height="70*"/>
+                    <RowDefinition Height="70*"/>
+                    <RowDefinition Height="300*"/>
+                </Grid.RowDefinitions>
+                <Button x:Name="layer1" Margin="20,10,15,10" Grid.Row="6" Background="{x:Null}" BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.AppWorkspaceBrushKey}}" Content="第1层" Foreground="DimGray" FontSize="16" HorizontalContentAlignment="Center" Template="{DynamicResource ButtonControlTemplate}" Click="layer1_Click"/>
+                <Button x:Name="layer2" Margin="20,10,15,10" Grid.Row="5" Background="{x:Null}" BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.AppWorkspaceBrushKey}}" Content="第2层" Foreground="DimGray" FontSize="16" HorizontalContentAlignment="Center" Template="{DynamicResource ButtonControlTemplate}" Click="layer2_Click"/>
+                <Button x:Name="layer3" Margin="20,10,15,10" Grid.Row="4" Background="{x:Null}" BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.AppWorkspaceBrushKey}}" Content="第3层" Foreground="DimGray" FontSize="16" HorizontalContentAlignment="Center" Template="{DynamicResource ButtonControlTemplate}" Click="layer3_Click"/>
+                <Button x:Name="layer4" Margin="20,10,15,10" Grid.Row="3" Background="{x:Null}" BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.AppWorkspaceBrushKey}}" Content="第4层" Foreground="DimGray" FontSize="16" HorizontalContentAlignment="Center" Template="{DynamicResource ButtonControlTemplate}" Click="layer4_Click"/>
+                <Button x:Name="layer5" Margin="20,10,15,10" Grid.Row="2" Background="{x:Null}" BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.AppWorkspaceBrushKey}}" Content="第5层" Foreground="DimGray" FontSize="16" HorizontalContentAlignment="Center" Template="{DynamicResource ButtonControlTemplate}" Click="layer5_Click"/>
+                <Button x:Name="close" Margin="20,10,15,10" Grid.Row="7" Background="{x:Null}" BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.AppWorkspaceBrushKey}}" Content="退  出" Foreground="DimGray" FontSize="16" HorizontalContentAlignment="Center" Template="{DynamicResource ButtonControlTemplate}" Click="close_Click"/>
+                <Border BorderBrush="{DynamicResource {x:Static SystemColors.AppWorkspaceBrushKey}}" BorderThickness="0,1,0,0" Margin="20,0,15,0" Grid.Row="1"/>
+                <Grid Margin="20,45,15,20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="4*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="4*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.Background>
+                        <ImageBrush ImageSource="Resource/paper.png"/>
+                    </Grid.Background>
+                    <Label x:Name="info1" Content="书架号" Margin="15,10,0,10" Background="{x:Null}" FontSize="14" FontWeight="Bold">
+                        <Label.Foreground>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.WindowFrameColorKey}}"/>
+                        </Label.Foreground>
+                    </Label>
+                    <Label x:Name="info2" Content="本层盘点总数0本" Margin="15,0,0,0" Grid.Row="1" FontSize="12">
+                        <Label.Foreground>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.GrayTextColorKey}}"/>
+                        </Label.Foreground>
+                    </Label>
+                    <Label x:Name="info3" Content="错架0本 | 遗失0本" Margin="15,0,0,10" Grid.Row="2" FontSize="12">
+                        <Label.Foreground>
+                            <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}"/>
+                        </Label.Foreground>
+                    </Label>
+                </Grid>
+            </Grid>
+            <Grid Grid.Column="1" Margin="0,0,0,0">
+                <GroupBox x:Name="groupBox" Header="汇总信息" Margin="30,35,30,20" FontSize="18" Foreground="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" BorderBrush="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}">
+                    <ListView x:Name="listView" Margin="10,20,10,10" ItemsSource="{Binding}" FontSize="14" SelectionChanged="listView_SelectionChanged">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="#" Width="60" DisplayMemberBinding="{Binding SN}"/>
+                                <GridViewColumn Header="编码" Width="80" DisplayMemberBinding="{Binding Barcode}"/>
+                                <GridViewColumn Header="书名" Width="240" DisplayMemberBinding="{Binding Title}"/>
+                                <GridViewColumn Header="实际书架" Width="80" DisplayMemberBinding="{Binding ScanShelf}"/>
+                                <GridViewColumn Header="实际层数" Width="80" DisplayMemberBinding="{Binding ScanLayer}"/>
+                                <GridViewColumn Header="初始书架" Width="80" DisplayMemberBinding="{Binding Shelf}"/>
+                                <GridViewColumn Header="初始层数" Width="80" DisplayMemberBinding="{Binding Layer}"/>
+                                <GridViewColumn Header="状态" Width="80" DisplayMemberBinding="{Binding State}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </GroupBox>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

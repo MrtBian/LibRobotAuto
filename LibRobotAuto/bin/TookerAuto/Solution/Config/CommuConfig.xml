@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<Configure>
+  <IP>192.168.2.111</IP>
+  <CmdCommuPort>3000</CmdCommuPort>
+  <EventCommuPort>3001</EventCommuPort>
+</Configure>
