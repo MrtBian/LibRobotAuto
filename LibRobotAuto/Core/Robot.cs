@@ -916,7 +916,7 @@ namespace LibRobotAuto.Core
                 toWHU = true;
                 content = robotNo + "号机器盘点完成，没有跳过书架！";
             }
-            UserConfig.email.trySendEmail(UserConfig.SchoolCode+"-"+ robotNo + ",A"+floor +",盘点完成", content, toWHU);
+            UserConfig.email.trySendEmail(UserConfig.SchoolCode+"-"+ robotNo + ",A"+floor +",盘点完成", content);
 
             UserConfig.RobotRunning = false;
             UserConfig.StartNewInventory = true;
@@ -960,7 +960,7 @@ namespace LibRobotAuto.Core
             string robotNo = UserConfig.RobotNumber;
             string content = robotNo + "号机器盘点完成，没有跳过书架！";
             
-            UserConfig.email.trySendEmail(UserConfig.SchoolCode + "-" + robotNo + ",A" + floor + ",盘点完成", content, false);
+            UserConfig.email.trySendEmail(UserConfig.SchoolCode + "-" + robotNo + ",A" + floor + ",盘点完成", content);
 
             GenerateInventoryEndfile();
             UserConfig.RobotRunning = false;

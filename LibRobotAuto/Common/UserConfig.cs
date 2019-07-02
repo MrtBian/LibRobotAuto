@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Windows;
 using System.Xml;
+using System.Collections.Generic;
 using System.Xml.XPath;
 using LibRobotAuto.Module;
 using LibRobotAuto.Core;
@@ -45,12 +46,12 @@ namespace LibRobotAuto.Common
         public static ushort FifthLayerRelativeHeight = 520;
         public static ushort SixthLayerRelativeHeight = 800;
 
-        public static ushort FirstLayerAbsoluteHeight;
-        public static ushort SecondLayerAbsoluteHeight;
-        public static ushort ThirdLayerAbsoluteHeight;
-        public static ushort FourthLayerAbsoluteHeight;
-        public static ushort FifthLayerAbsoluteHeight;
         public static ushort SixthLayerAbsoluteHeight;
+        public static ushort FifthLayerAbsoluteHeight;
+        public static ushort FourthLayerAbsoluteHeight;
+        public static ushort ThirdLayerAbsoluteHeight;
+        public static ushort SecondLayerAbsoluteHeight;
+        public static ushort FirstLayerAbsoluteHeight;
 
         public static byte DistanceToBookshelf = 40;
 
@@ -68,6 +69,16 @@ namespace LibRobotAuto.Common
         public static bool AutoRunning = false;                 //机器人是否自动运行
         public static int ScanHour;                             //机器人定时盘点的小时
         public static int ScanMinute;                           //机器人定时盘点的分钟
+        public static string remoteIpAndPort;                   //机器人传输的服务器地址
+
+        //email config
+        public static bool EnableMail=false;
+        public static string FromName="";
+        public static string FromPassword="";
+        public static List<string> ToList=new List<string>();
+        public static string EmailHost="";
+        public static int EmailPort=25;
+
 
         // 这些参数待加入设置文件，还未加入
         public static int maxFolderCapacity = 10;        
@@ -88,8 +99,6 @@ namespace LibRobotAuto.Common
 
         static UserConfig()
         {
-
-            email = new EmailModule();
             XmlReaderSettings settings = new XmlReaderSettings();
             settings.IgnoreComments = true;//忽略文档里面的注释            
             XmlReader reader = XmlReader.Create(@"Config_I&Q\UserConfig.xml", settings);
@@ -132,12 +141,12 @@ namespace LibRobotAuto.Common
                 FourthLayerRelativeHeight = System.Convert.ToUInt16(xnl.Item(7).InnerText.ToString());
                 FifthLayerRelativeHeight = System.Convert.ToUInt16(xnl.Item(8).InnerText.ToString());
                 SixthLayerRelativeHeight = System.Convert.ToUInt16(xnl.Item(9).InnerText.ToString());
-                FirstLayerAbsoluteHeight = (ushort)(BottomLifterBaseHeight + LifterHeightOffset + FirstLayerRelativeHeight);
-                SecondLayerAbsoluteHeight = (ushort)(BottomLifterBaseHeight + LifterHeightOffset + SecondLayerRelativeHeight);
-                ThirdLayerAbsoluteHeight = (ushort)(BottomLifterBaseHeight + LifterHeightOffset + ThirdLayerRelativeHeight);
-                FourthLayerAbsoluteHeight = (ushort)(UpperLifterBaseHeight + LifterHeightOffset + FourthLayerRelativeHeight);
-                FifthLayerAbsoluteHeight = (ushort)(UpperLifterBaseHeight + LifterHeightOffset + FifthLayerRelativeHeight);
-                SixthLayerAbsoluteHeight = (ushort)(UpperLifterBaseHeight + LifterHeightOffset + SixthLayerRelativeHeight);
+                SixthLayerAbsoluteHeight = (ushort)(BottomLifterBaseHeight + LifterHeightOffset + FirstLayerRelativeHeight);
+                FifthLayerAbsoluteHeight = (ushort)(BottomLifterBaseHeight + LifterHeightOffset + SecondLayerRelativeHeight);
+                FourthLayerAbsoluteHeight = (ushort)(BottomLifterBaseHeight + LifterHeightOffset + ThirdLayerRelativeHeight);
+                ThirdLayerAbsoluteHeight = (ushort)(UpperLifterBaseHeight + LifterHeightOffset + FourthLayerRelativeHeight);
+                SecondLayerAbsoluteHeight = (ushort)(UpperLifterBaseHeight + LifterHeightOffset + FifthLayerRelativeHeight);
+                FirstLayerAbsoluteHeight = (ushort)(UpperLifterBaseHeight + LifterHeightOffset + SixthLayerRelativeHeight);
 
                 DistanceToBookshelf = System.Convert.ToByte(xnl.Item(10).InnerText.ToString());
 
@@ -166,6 +175,22 @@ namespace LibRobotAuto.Common
                 inventoryDatafilePath = Path.Combine(UserConfig.rootPath, "data", UserConfig.InventoryDatafileDirectory);
                 scanFloor = "A" + (FloorDefaultSelectedIndex + 2).ToString();
                 AutoRunning = (xnl.Item(8).InnerText.ToString() == "True") ? true : false;
+                remoteIpAndPort = xnl.Item(9).InnerText.ToString();
+
+                //Get email config
+                xn1 = xn.ChildNodes.Item(4);
+                //xnl = xn.SelectSingleNode("EmailConfig").ChildNodes;
+                xnl = xn1.ChildNodes;
+                EnableMail = (xnl.Item(0).InnerText.ToString() == "True") ? true : false;
+                FromName = xnl.Item(1).InnerText.ToString();
+                FromPassword = xnl.Item(2).InnerText.ToString();
+                XmlNodeList EmailList = xnl.Item(3).ChildNodes;
+                foreach (XmlNode ToNode in EmailList)
+                {
+                    ToList.Add(ToNode.InnerText.ToString());
+                }
+                EmailHost = xnl.Item(4).InnerText.ToString();
+                EmailPort = System.Convert.ToInt32(xnl.Item(5).InnerText.ToString());
             }
             catch (XmlException e)
             {
@@ -174,7 +199,9 @@ namespace LibRobotAuto.Common
             finally
             {
                 reader.Close();
-            }              
+            }
+
+            email = new EmailModule();
         }
 
         public static void SaveUserConfig()
@@ -217,6 +244,15 @@ namespace LibRobotAuto.Common
             XmlNode xn_InventoryDatafileDirectory = xnl_OtherConfig.Item(6);
             XmlNode xn_ScanTime = xnl_OtherConfig.Item(7);
             XmlNode xn_AutoScan = xnl_OtherConfig.Item(8);
+            XmlNode xn_remoteIpAndPort = xnl_OtherConfig.Item(9);
+
+            XmlNodeList xnl_EmailConfig = xmlDoc.SelectSingleNode("UserConfig").ChildNodes.Item(4).ChildNodes;
+            XmlNode xn_EnableEmail = xnl_EmailConfig.Item(0);
+            //XmlNode xn_FromName = xnl_EmailConfig.Item(1);
+            //XmlNode xn_FromPassword = xnl_EmailConfig.Item(2);
+            //XmlNodeList xn_EmailList = xnl_EmailConfig.Item(3).ChildNodes;// ?
+            //XmlNode xn_EmailHost = xnl_EmailConfig.Item(4);
+            //XmlNode xn_EmailPort = xnl_EmailConfig.Item(5);
 
             // Save database config
             xn_Server.InnerText = Server;
@@ -256,6 +292,15 @@ namespace LibRobotAuto.Common
             xn_InventoryDatafileDirectory.InnerText = InventoryDatafileDirectory;
             xn_ScanTime.InnerText = ScanHour + "-" + ScanMinute;
             xn_AutoScan.InnerText = AutoRunning.ToString();
+            xn_remoteIpAndPort.InnerText = remoteIpAndPort;
+
+            //Save email config 
+            xn_EnableEmail.InnerText = EnableMail.ToString();
+            //xn_FromName.InnerText = FromName;
+            //xn_FromPassword.InnerText = FromName;
+            
+            //xn_EmailHost.InnerText = EmailHost;
+            //xn_EmailPort.InnerText = EmailPort.ToString();
 
             xmlDoc.Save(@"Config_I&Q\UserConfig.xml");
         }

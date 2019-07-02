@@ -91,6 +91,76 @@
                 </CheckBox.Template>
             </CheckBox>
         </StackPanel>
+        <StackPanel>
+            <CheckBox Name="Check_Email"
+                      Margin="325,398,0,0"
+                      Checked="Check_Email_Checked"
+                      Unchecked="Check_Email_Unchecked">
+                <CheckBox.Template>
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                        <ControlTemplate.Resources>
+                            <Storyboard x:Key="StoryboardIsChecked">
+                                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="CheckFlag">
+                                    <EasingDoubleKeyFrame KeyTime="0" Value="1.5"/>
+                                    <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="34"/>
+                                </DoubleAnimationUsingKeyFrames>
+                            </Storyboard>
+                            <Storyboard x:Key="StoryboardIsCheckedOff">
+                                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="CheckFlag">
+                                    <EasingDoubleKeyFrame KeyTime="0" Value="34"/>
+                                    <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1.5"/>
+                                </DoubleAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </ControlTemplate.Resources>
+                        <BulletDecorator Background="Transparent" SnapsToDevicePixels="true">
+                            <BulletDecorator.Bullet>
+                                <Border x:Name="ForegroundPanel" BorderThickness="1.5" Width="70" Height="35" CornerRadius="17.5">
+                                    <Canvas>
+                                        <Border Background="White" x:Name="CheckFlag" CornerRadius="16" VerticalAlignment="Center" BorderThickness="1.5" Width="32" Height="32" RenderTransformOrigin="0.5,0.5">
+                                            <Border.RenderTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform/>
+                                                    <SkewTransform/>
+                                                    <RotateTransform/>
+                                                    <TranslateTransform/>
+                                                </TransformGroup>
+                                            </Border.RenderTransform>
+                                            <Border.Effect>
+                                                <DropShadowEffect ShadowDepth="1" Direction="180" />
+                                            </Border.Effect>
+                                        </Border>
+                                    </Canvas>
+                                </Border>
+                            </BulletDecorator.Bullet>
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center"/>
+                        </BulletDecorator>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasContent" Value="true">
+                                <Setter Property="FocusVisualStyle" Value="{StaticResource CheckRadioFocusVisual}"/>
+                                <Setter Property="Padding" Value="4,0,0,0"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="ForegroundPanel" Property="Background" Value="Green" />
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard x:Name="BeginStoryboardCheckedTrue" Storyboard="{StaticResource StoryboardIsChecked}" />
+                                    <RemoveStoryboard BeginStoryboardName="BeginStoryboardCheckedFalse" />
+                                </Trigger.EnterActions>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter TargetName="ForegroundPanel" Property="Background" Value="Gray" />
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard x:Name="BeginStoryboardCheckedFalse" Storyboard="{StaticResource StoryboardIsCheckedOff}" />
+                                    <RemoveStoryboard BeginStoryboardName="BeginStoryboardCheckedTrue" />
+                                </Trigger.EnterActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </CheckBox.Template>
+            </CheckBox>
+        </StackPanel>
         <Label Content="楼层" 
                FontSize="20"
                Foreground="White"
@@ -134,6 +204,14 @@
                HorizontalAlignment="Left" 
                Height="35" 
                Margin="200,328,0,0" 
+               VerticalAlignment="Top" 
+               Width="100"/>
+        <Label Content="启动邮件" 
+               FontSize="20"
+               Foreground="White"
+               HorizontalAlignment="Left" 
+               Height="35" 
+               Margin="200,398,0,0" 
                VerticalAlignment="Top" 
                Width="100"/>
         <ComboBox Name="ComboBox_ScanHour" 

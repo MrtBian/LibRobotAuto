@@ -190,16 +190,16 @@ namespace LibRobotAuto.Module
             switch (status)
             {
                 case LiftStatus.HighLevel:
-                    upperScannerHeight = UserConfig.SixthLayerAbsoluteHeight;
-                    bottomScannerHeight = UserConfig.ThirdLayerAbsoluteHeight;
+                    upperScannerHeight = UserConfig.FirstLayerAbsoluteHeight;
+                    bottomScannerHeight = UserConfig.FourthLayerAbsoluteHeight;
                     break;
                 case LiftStatus.MiddleLevel:
-                    upperScannerHeight = UserConfig.FifthLayerAbsoluteHeight;
-                    bottomScannerHeight = UserConfig.SecondLayerAbsoluteHeight;
+                    upperScannerHeight = UserConfig.SecondLayerAbsoluteHeight;
+                    bottomScannerHeight = UserConfig.FifthLayerAbsoluteHeight;
                     break;
                 default:
-                    upperScannerHeight = UserConfig.FourthLayerAbsoluteHeight;
-                    bottomScannerHeight = UserConfig.FirstLayerAbsoluteHeight;
+                    upperScannerHeight = UserConfig.ThirdLayerAbsoluteHeight;
+                    bottomScannerHeight = UserConfig.SixthLayerAbsoluteHeight;
                     break;
             }
 

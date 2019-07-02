@@ -36,6 +36,7 @@ namespace LibRobotAuto
             categoryList.Add(new CategoryInfo { Name = "四楼", Value = "A4" });
             //categoryList.Add(new CategoryInfo { Name = "A栋五楼", Value = "A5" });
             CheckBox_Auto.IsChecked = UserConfig.AutoRunning;
+            Check_Email.IsChecked = UserConfig.EnableMail;
 
             ComboBox_Floor.ItemsSource = categoryList;
             ComboBox_Floor.DisplayMemberPath = "Name";//显示出来的值
@@ -104,6 +105,19 @@ namespace LibRobotAuto
         {
             CheckBox_Auto.IsChecked = false;
             TimingScanModule.StopTimingScan();
+        }
+
+        private void Check_Email_Checked(object sender, RoutedEventArgs e)
+        {
+            Check_Email.IsChecked = true;
+            UserConfig.EnableMail = true;
+            
+        }
+
+        private void Check_Email_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Check_Email.IsChecked = false;
+            UserConfig.EnableMail = false;
         }
 
         private void Button_Charge_Click(object sender, RoutedEventArgs e)

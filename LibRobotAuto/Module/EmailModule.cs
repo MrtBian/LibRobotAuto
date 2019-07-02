@@ -6,23 +6,27 @@ using System.Threading.Tasks;
 using System.Net.Mail;
 using System.Diagnostics;
 using System.Threading;
+using LibRobotAuto.Common;
 
 namespace LibRobotAuto.Module
 {
     public class EmailModule
     {
-        public static string Server = "lib.whu.edu.cn";
-        public static int Port = 25;
-        public static string Username = "scan@lib.whu.edu.cn";
-        public static string Password = "2018rfid";
+        //public static string Server = "lib.whu.edu.cn";
+        //public static string Server = "smtp.163.com";
+        public static string Server = UserConfig.EmailHost;
+        public static int Port = UserConfig.EmailPort;
+        //public static string Username = "scan@lib.whu.edu.cn";
+        //public static string Password = "2018rfid";
+        public static string Username = UserConfig.FromName;
+        public static string Password = UserConfig.FromPassword;
         public static bool EnableSsl = false;
-        public static string Subject = "机器人卡死";
-        public static string Body = "机器人卡死!";
+        public static string Subject = "机器人意外停止";
+        public static string Body = "机器人意外停止!";
         public static string SendName = "TOOKER";
+        //public static string[] To = new string[] { "netlab624@163.com" };
+        public static string[] ToSchool = UserConfig.ToList.ToArray();
         public static string[] To = new string[] { "netlab624@163.com" };
-        public static string[] ToWHU = new string[] { "liquan@lib.whu.edu.cn",
-            "hqh@lib.whu.edu.cn", "whduan@lib.whu.edu.cn",
-            "longquan@lib.whu.edu.cn", "xuqiong@lib.whu.edu.cn" };
 
         private static int TRY_SEND = 3;
 
@@ -32,6 +36,13 @@ namespace LibRobotAuto.Module
         public EmailModule()
         {
             //Host config
+            Server = UserConfig.EmailHost;
+            Port = UserConfig.EmailPort;
+            Username = UserConfig.FromName;
+            Password = UserConfig.FromPassword;
+            ToSchool = UserConfig.ToList.ToArray();
+
+
             Host = new SmtpClient(Server, Port);
             Host.Credentials = new System.Net.NetworkCredential(Username, Password);
             Host.EnableSsl = EnableSsl;
@@ -85,7 +96,7 @@ namespace LibRobotAuto.Module
             }
             return true;
         }
-        public bool sendEmail(string subject, string body, bool toWHU = false)
+        public bool sendEmail(string subject, string body)
         {
             Mail = new MailMessage();
             Mail.From = new MailAddress(Username, SendName);
@@ -94,9 +105,9 @@ namespace LibRobotAuto.Module
             {
                 Mail.To.Add(t);
             }
-            if (toWHU)
+            if (UserConfig.EnableMail)
             {
-                foreach (var t in ToWHU)
+                foreach (var t in ToSchool)
                 {
                     Mail.To.Add(t);
                 }
@@ -150,12 +161,12 @@ namespace LibRobotAuto.Module
          * 发送邮件，会尝试多次
          * subject: 邮件主题
          * body:    邮件内容
-         * toWHU:   是否发送给武大
+         * ToSchool:   是否发送给武大
          */
-        public void trySendEmail(string subject, string body, bool toWHU=false)
+        public void trySendEmail(string subject, string body)
         {
             int tryCount = 0;
-            while (!sendEmail(subject, body, toWHU))
+            while (!sendEmail(subject, body))
             {
                 Trace.TraceInformation("邮件发送失败，正在重新发送！");
                 //发送失败，暂停五秒尝试重发
@@ -167,11 +178,11 @@ namespace LibRobotAuto.Module
                 }
             }
         }
-        //public static void Main(string[] args)
-        //{
-        //    //方法体
-        //    EmailModule email = new EmailModule();
-        //    email.trySendEmail("Test", "这是一封测试邮件，请无视", true);
-        //}
+        public static void Main(string[] args)
+        {
+            //方法体
+            EmailModule email = new EmailModule();
+            email.trySendEmail("Test", "这是一封测试邮件，请无视");
+        }
     }
 }

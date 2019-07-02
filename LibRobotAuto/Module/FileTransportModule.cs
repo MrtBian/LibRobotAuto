@@ -17,7 +17,8 @@ namespace LibRobotAuto.Module
         public static AutoResetEvent endFileEvent = new AutoResetEvent(false); /* 用于线程间同步 */
 
         private static readonly object dtLock = new object();
-
+        //public static string remoteIpAndPort = "http://47.100.185.147:8085";
+        public static string remoteIpAndPort = UserConfig.remoteIpAndPort;
         public static bool endres = false;
         public static bool taskcancel = false;
         public const string endFileName = "end";
@@ -169,7 +170,7 @@ namespace LibRobotAuto.Module
         public FileTransfer()
         {
             httpC = new HttpClient();
-            uri = new Uri("http://47.100.185.147:8085/data");
+            uri = new Uri(Helper.remoteIpAndPort + "/data");
             httpC.DefaultRequestHeaders.ConnectionClose = true;
             //httpC.DefaultRequestHeaders.Connection.Add("keep-alive");
             httpC.Timeout = new TimeSpan(0, 15, 0);
@@ -205,11 +206,19 @@ namespace LibRobotAuto.Module
                     {
                         var subDir = dir.Remove(0, dataRootPath.Length);
                         Package pkg = getFileContent(dir, subDir);
-                        while (pkg != null)
+
+                        if (pkg != null)
                         {
                             transferAsync(pkg, subDir);
-                            pkg = getFileContent(dir, subDir);
                         }
+                        // <<<
+                        //  2019-06-12 去掉循环，因为有可能在某些条件下发生死循环，肯能会造成内存溢出。
+                        // >>>
+                        //while (pkg != null)
+                        //{
+                        //    transferAsync(pkg, subDir);
+                        //    pkg = getFileContent(dir, subDir);
+                        //}
                     }
                 }
                 catch (Exception e)
@@ -241,6 +250,9 @@ namespace LibRobotAuto.Module
                 List<string> failedfiles = Directory.GetFiles(failed_path).Select(Path.GetFileName).OrderBy(f => new FileInfo(failed_path + "\\" + f).LastWriteTime).Take(4).ToList();
                 if (failedfiles == null || failedfiles.Count == 0)
                 {
+                    // <<<
+                    //  2019-06-12 去掉该条日志，因为有可能会使日志成倍增长。
+                    // >>>
                     //Log.error("[FileTransfer.reTransfer method] Error:  no failedFiles in failedPath " + failed_path);
                     return;
                 }
@@ -296,6 +308,7 @@ namespace LibRobotAuto.Module
 
 
             int retry = 2;
+
             while ((Directory.Exists(failed_path) && Directory.GetFiles(failed_path).Length > 0) && retry > 0)
             {
                 HttpContent cont = new StringContent(JsonConvert.SerializeObject(pkg));
@@ -306,9 +319,20 @@ namespace LibRobotAuto.Module
                     var res = response.Content.ReadAsStringAsync().Result;
                     if (res != null && res == "OK")
                     {
-                        if (pkg.fileNames.Contains(Helper.endFileName)) { Helper.resFileName = __subDir + ".res"; Helper.endFileEvent.Set(); Directory.Delete(failed_path, true); }
+                        if (pkg.fileNames.Contains(Helper.endFileName))
+                        {
+                            Helper.resFileName = __subDir + ".res";
+                            Helper.endFileEvent.Set();
+                            Directory.Delete(failed_path, true);
+                        }
                         else
-                            foreach (string fn in pkg.fileNames) { File.Delete(failed_path + "\\" + fn); }
+                        {
+                            foreach (string fn in pkg.fileNames)
+                            {
+                                File.Delete(failed_path + "\\" + fn);
+                            }
+                        }
+
 
                         Log.info("[FileTransfer.reTransfer method] Success: " + String.Join(",", pkg.fileNames));
                         return;
@@ -318,14 +342,18 @@ namespace LibRobotAuto.Module
                 {
                     retry--;
                 }
+
+                cont = null;
             }
 
             pkg = null;
+
         }
 
         /* 搜索dataPath路径下最新生成的文件的文件名 */
         private Package getFileContent(string dataPath, string _subDir)
         {
+
 
             /* 按文件最后修改时间降序 */
             var look = (from f in Directory.EnumerateFiles(dataPath)
@@ -337,7 +365,7 @@ namespace LibRobotAuto.Module
             /* 得到最新文件名 */
             List<string> names = look.ToList();
             if (names.Count < 1) { return null; }
-            Log.info("[FileTransfer.getFileContent method] newfileNames: " + String.Join(",", names.ToArray()));
+            Log.info("[FileTransfer.getFileContent method] path: " + dataPath + " newfileNames: " + String.Join(",", names.ToArray()));
 
             /* 创建网络传输包 然后向其中填充文件内容*/
             Package pkg = new Package();
@@ -383,6 +411,9 @@ namespace LibRobotAuto.Module
 
                 dt = new FileInfo(dataPath + "\\" + pkg.fileNames[pkg.fileNames.Count - 1]).LastWriteTime;
                 Helper.opDateFile("w", dt);
+
+                //<2019-06-13> 删除临时日志
+                //Log.info("[getFileContent ] dataTime: " + dt.ToString());
             }
             catch (Exception e)
             {
@@ -472,13 +503,16 @@ namespace LibRobotAuto.Module
                 {
                     if (!Directory.Exists(Helper.failedRootPath))
                     {
-                        //Log.info("[FilesReTransAll.reTransAll method] Log:   failedRootPath not exists" + Helper.failedRootPath);
+                        //
+                        //<2019-06-13> 删除冗余日志
+                        //
+                        //Log.info("[FilesReTransAll.reTransAll method] Log: failedRootPath not exists " + Helper.failedRootPath);                      
                         continue;
                     }
 
                     /* 若没有失败文件则过1min后检查一下目录 */
                     string[] dirs = Directory.GetDirectories(Helper.failedRootPath);
-                    if (dirs.Count() < 1) { Thread.Sleep(60000); ; continue; }
+                    if (dirs.Count() < 1) { Thread.Sleep(60000); continue; }
 
 
                     List<string> dirList = dirs.Select(s => s.Remove(0, Helper.failedRootPath.Length + 1)).ToList();
@@ -518,7 +552,7 @@ namespace LibRobotAuto.Module
         public FilesRequest()
         {
             httpclient = new HttpClient();
-            uri = new Uri("http://47.100.185.147:8085/result");
+            uri = new Uri(Helper.remoteIpAndPort + "/result");
             //httpclient.DefaultRequestHeaders.Connection.Add("keep-alive");
             httpclient.Timeout = new TimeSpan(0, 35, 0);
         }
@@ -636,18 +670,19 @@ namespace LibRobotAuto.Module
                 while (true)
                 {
 
-                    if (DateTime.Now.Subtract(start).Hours > 3)
+                    if (DateTime.Now.Subtract(start).Hours > 4)
                     {
                         Log.error("[FilesRequest.run method] Timeout:  now break!");
-                        string subject = UserConfig.SchoolCode + "-" + UserConfig.RobotNumber + "," + UserConfig.scanFloor + ",网络连接超时";
-                        String body = "网络连接超时，传输结果文件失败！";
-                        UserConfig.email.trySendEmail(subject, body, true);
+                        string subject = "获取.res超时";
+                        String body = "由于网络信号较差，传输.res文件失败！";
+                        //trySendEmail(subject, body, false);
                         return;
                     }
 
                     if (chance < 4)
                     {
                         Log.info("[FilesRequest.run method] request restart! chance=" + chance);
+                        Log.info("[FilesRequest.run method] Helper.endres=" + Helper.endres + " Helper.taskcancel=" + Helper.taskcancel);
                         chance++;
                     }
 
@@ -667,16 +702,17 @@ namespace LibRobotAuto.Module
                     if (Helper.endres)/* 获取到远程文件后结束 */
                     {
                         Helper.endres = false;
-                        MessageBox.Show("已获取到远程文件!");
+                        //MessageBox.Show("已获取到远程文件!");
                         Log.info("[FilesRequest.run method] Get '.res' file now method break!");
 
-                        return;
+                        //<2019-06-13>原来是return现在需要改为break,可以连续盘点获取.res文件
+                        //return;
+                        break;
                     }
                 }
             }
         }
     }
-
 
 
     class FileTransportModule

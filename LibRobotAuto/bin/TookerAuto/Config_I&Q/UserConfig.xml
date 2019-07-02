@@ -30,7 +30,7 @@
   </ShelfConfig>
   <OtherConfig>
     <FloorDefaultSelectedIndex>3</FloorDefaultSelectedIndex>
-    <SchoolCode>WHU</SchoolCode>
+    <SchoolCode>CUHKSZ</SchoolCode>
     <RobotNumber>1</RobotNumber>
     <ChargingTime>60</ChargingTime>
     <UploadDataToClound>True</UploadDataToClound>
@@ -38,5 +38,6 @@
     <InventoryDatafileDirectory>A5_2019-01-06_16-17-12_full</InventoryDatafileDirectory>
     <AutoScanTime>22-15</AutoScanTime>
     <AutoScan>False</AutoScan>
+    <remoteIpAndPort>http://47.100.185.147:8085</remoteIpAndPort>
   </OtherConfig>
 </UserConfig>
