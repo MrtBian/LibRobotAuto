@@ -57,11 +57,36 @@ namespace LibRobotAuto.Module
             return true;
         }
 
+        //针对四天线情况重载connect
+        public bool Connect(string hostname, bool[] port)
+        {
+            hostName = hostname;
+            if (!impinjReader.IsConnected)
+            {
+                try
+                {
+                    impinjReader.Connect(hostname);
+                    ConfigSettings(hostname, port);
+                    //impinjReader.TagsReported += OnTagsReported;  //多个监听数据冗余
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         // 断开阅读器
         public void Disconnect()
         {
             if (impinjReader.IsConnected)
+            {
+                //impinjReader.; //todo
                 impinjReader.Disconnect();
+            }
         }
 
         // 配置阅读器
@@ -104,8 +129,8 @@ namespace LibRobotAuto.Module
             }
 
             // 天线
-            List<ushort> antennaPorts = new List<ushort>();
-            antennaPorts.Add(2);
+            //List<ushort> antennaPorts = new List<ushort>();
+            //antennaPorts.Add(2);
             settings.Antennas.EnableAll();
             //settings.Antennas.DisableAll();
             //settings.Antennas.EnableById(antennaPorts);
@@ -165,7 +190,7 @@ namespace LibRobotAuto.Module
             }
             //antennaPorts.Add(2);
             //settings.Antennas.EnableAll();
-            //settings.Antennas.DisableAll();
+            settings.Antennas.DisableAll();
             settings.Antennas.EnableById(antennaPorts);
 
             settings.Antennas.TxPowerInDbm = UserConfig.MaxPower;

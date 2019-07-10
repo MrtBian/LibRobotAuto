@@ -988,13 +988,13 @@ namespace LibRobotAuto.Core
                 Thread.Sleep(100);
             }
 
-            mobilePlatform.ChangeMissionStatus(0x02, 0x02);
+            //mobilePlatform.ChangeMissionStatus(0x02, 0x02);
 
             while (!mobilePlatform.isIdle)
             {
                 if (mobilePlatform.AtEndPoint)
                 {
-                    mobilePlatform.ChangeMissionStatus(0x02, 0x02);
+                    //mobilePlatform.ChangeMissionStatus(0x02, 0x02);
                 }
 
                 if (mobilePlatform.MeetBarrier)
@@ -1023,14 +1023,20 @@ namespace LibRobotAuto.Core
         private int ScanShelf(LibraryRouteLine line)
         {
             //港中文对上半部分四天线 添加处理逻辑
+            upperReader.Disconnect();
+            //upperReader.Connect(UserConfig.UpperReaderHostname);
             if (line.height==LiftStatus.LowLevel)
             {
                 bool[] port =new bool[4] { true, true, false, false };
-                upperReader.ConfigSettings(UserConfig.UpperReaderHostname, port);
+                upperReader.Connect(UserConfig.UpperReaderHostname, port);
+                //upperReader.ConfigSettings(UserConfig.UpperReaderHostname, port);
+              
             } else {
                 bool[] port = new bool[4] { false,false,true,true };
-                upperReader.ConfigSettings(UserConfig.UpperReaderHostname, port);
+                upperReader.Connect(UserConfig.UpperReaderHostname, port);
+                //upperReader.ConfigSettings(UserConfig.UpperReaderHostname, port);
             }
+            
 
             mobilePlatform.ScanShelf(line.startPoint, line.endPoint, line.height, line.distanceToShelf, line.shelfType, line.shelfFlag);
 
@@ -1059,7 +1065,7 @@ namespace LibRobotAuto.Core
                 Thread.Sleep(100);
             }
 
-            mobilePlatform.ChangeMissionStatus(0x02, 0x02);
+           // mobilePlatform.ChangeMissionStatus(0x02, 0x02);
             Thread.Sleep(ComputeEnterShelfDelayTime());
             StartReaders();
 
@@ -1068,7 +1074,7 @@ namespace LibRobotAuto.Core
             {
                 if (mobilePlatform.AtEndPoint)
                 {
-                    mobilePlatform.ChangeMissionStatus(0x02, 0x02);
+                    //mobilePlatform.ChangeMissionStatus(0x02, 0x02);
                     Thread.Sleep(ComputeLeaveShelfDelayTime());
                     StopReaders();
                 }

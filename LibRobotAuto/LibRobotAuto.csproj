@@ -55,7 +55,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>LibRobotAuto.Module.EmailModule</StartupObject>
+    <StartupObject>LibRobotAuto.ProgramEntrance</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Impinj.OctaneSdk, Version=2.30.1.0, Culture=neutral, processorArchitecture=MSIL">
