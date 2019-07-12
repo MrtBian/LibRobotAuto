@@ -428,6 +428,7 @@ namespace LibRobotAuto.Core
         {
             if (UserConfig.UploadDataToClound && (UserConfig.UpperReaderEnable || UserConfig.BottomReaderEnable))
             {
+                Thread.Sleep(2000);
                 string path = Path.Combine(UserConfig.inventoryDatafilePath, "end");
                 FileStream endFile = File.Create(path);
                 endFile.Close();
