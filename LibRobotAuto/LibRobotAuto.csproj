@@ -57,6 +57,9 @@
   <PropertyGroup>
     <StartupObject>LibRobotAuto.ProgramEntrance</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Impinj.OctaneSdk, Version=2.30.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\OctaneSDK.2.30.1\lib\net461\Impinj.OctaneSdk.dll</HintPath>

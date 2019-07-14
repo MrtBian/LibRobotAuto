@@ -214,6 +214,10 @@ namespace LibRobotAuto.Core
             }
         }
 
+        /*
+         获取定点对应的坐标信息，mapPositionsFilename文件读取的每行为：点 x坐标 y坐标 角度
+         便于后期路线点的寻找
+        */
         private void LoadMapPositions(string mapPositionsFilename)
         {
             MapPositions = new Dictionary<string, RobotPosition>();
@@ -248,6 +252,10 @@ namespace LibRobotAuto.Core
             }
         }
 
+
+        /*
+         读取每行的route信息， 1 1012 1011 0 50 N00 1 4，提取路线信息调整设置
+        */
         private LibraryRouteLine analyzeLibarayRouteLine(string line)
         {
             LibraryRouteLine mapLine = new LibraryRouteLine();
@@ -262,6 +270,7 @@ namespace LibRobotAuto.Core
                 }
             }
 
+            //路径类型，0：移动，1：扫描，2：充电，3：扫描方式移动
             mapLine.lineType = (MapLineType)System.Convert.ToInt32(temp[0]);
             startPositionCode = temp[1];
             mapLine.startPoint.PositionNo = startPositionCode;
@@ -272,6 +281,7 @@ namespace LibRobotAuto.Core
             mapLine.group = temp[1][0] - '0' + 1;
             mapLine.column = mapLine.group;
             mapLine.row = System.Convert.ToInt32(temp[1].Substring(1, 2));
+            //根据奇数排还是偶数拍进行换方向
             if (mapLine.row % 2 == 1)
             {
                 if (temp[1][3] < temp[2][3])
@@ -298,7 +308,7 @@ namespace LibRobotAuto.Core
             mapLine.shelfType = temp[5];
             mapLine.startShelfNo = System.Convert.ToByte(temp[6]);
             mapLine.shelfCount = System.Convert.ToByte(temp[7]);
-            //增加下位机需要信息
+            //增加下位机需要信息，书架类型会有区别 防止碰撞
             if(temp.Count > 8)
             {
                 mapLine.shelfFlag = System.Convert.ToByte(temp[8]);
@@ -312,6 +322,10 @@ namespace LibRobotAuto.Core
             return mapLine;
         }
 
+
+        /*
+         获取整图书馆路线信息，调用上面的analyzeLibarayRouteLine一步一步进行调整
+             */
         private void LoadFullRoute(string routeFilename)
         {
             Route = new List<LibraryRouteLine>();
@@ -329,6 +343,18 @@ namespace LibRobotAuto.Core
             }
         }
 
+
+        /*
+         shelfRoute为局部定位时使用，规定局部盘点时书架的正反两面都需要扫描
+         例如：
+            101 1012 3
+            1 1012 1011 0 50 N00 1 9
+            0 1011 1021 0 50 N00 0 0
+            1 1021 1022 0 50 N00 1 9
+            
+            局部路径每一个书架的导航路径用空行隔开。
+            第一行有三个信息，分别为书架编号，中转点和路径数目。
+             */
         private void LoadShelfRoute(string shelfRouteFilename)
         {
             ShelfRoutes = new Dictionary<string, ShelfRoute>();
@@ -358,6 +384,9 @@ namespace LibRobotAuto.Core
             }
         }
 
+        /*
+         加载入各种路径和点信息便于之后的导航
+             */
         private void LoadMapInfosAndRoute()
         {
             Trace.TraceInformation("load map positions in MapPositions_whu_" + ScanFloor + "_v2.txt");
@@ -383,7 +412,9 @@ namespace LibRobotAuto.Core
         /// <param name="inventoryType"></param>
         private void GenerateInventoryDatafileDirectory(string inventoryType)
         {
+            //InventoryDatafileDirectory：盘点数据文件夹：A4_2019-07-08_14-34-47_full
             UserConfig.InventoryDatafileDirectory = string.Format("{0}_{1}_{2}", ScanFloor, DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"), inventoryType);
+            //路径，存在云端/Tooker/data/CUHKSZ/1/
             UserConfig.inventoryDatafilePath = Path.Combine(UserConfig.rootPath, "data", UserConfig.InventoryDatafileDirectory);
 
             Directory.CreateDirectory(UserConfig.inventoryDatafilePath);
@@ -397,6 +428,7 @@ namespace LibRobotAuto.Core
         {
             if (UserConfig.UploadDataToClound && (UserConfig.UpperReaderEnable || UserConfig.BottomReaderEnable))
             {
+                Thread.Sleep(2000);
                 string path = Path.Combine(UserConfig.inventoryDatafilePath, "end");
                 FileStream endFile = File.Create(path);
                 endFile.Close();
@@ -406,6 +438,7 @@ namespace LibRobotAuto.Core
 
         /// <summary>
         /// Check inventory data file directory, generate a new one if it's not exist or it's finished.
+        /// 先创建存放raw data文件夹
         /// </summary>
         private void CheckInventoryDatafileDirectory()
         {
