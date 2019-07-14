@@ -208,6 +208,7 @@ namespace LibRobotAuto.Module
         // 开始扫描
         public void Start()
         {
+          
             if (impinjReader.IsConnected)
             {
                 tags.Clear();

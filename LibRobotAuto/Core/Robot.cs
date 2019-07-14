@@ -428,7 +428,8 @@ namespace LibRobotAuto.Core
         {
             if (UserConfig.UploadDataToClound && (UserConfig.UpperReaderEnable || UserConfig.BottomReaderEnable))
             {
-                Thread.Sleep(2000);
+                // 此处延迟不能删去
+                Thread.Sleep(3000);
                 string path = Path.Combine(UserConfig.inventoryDatafilePath, "end");
                 FileStream endFile = File.Create(path);
                 endFile.Close();
@@ -1053,7 +1054,7 @@ namespace LibRobotAuto.Core
         /// </summary>
         /// <param name="line">library route line</param>
         /// <returns>scan result</returns>
-        private int ScanShelf(LibraryRouteLine line)
+                                    private int ScanShelf(LibraryRouteLine line)
         {
             //港中文对上半部分四天线 添加处理逻辑
             //upperReader.Disconnect();
@@ -1073,7 +1074,7 @@ namespace LibRobotAuto.Core
                 //upperReader.ConfigSettings(UserConfig.UpperReaderHostname, port);
             }
 
-            upperReader.Start();
+            //upperReader.Start();
 
             mobilePlatform.ScanShelf(line.startPoint, line.endPoint, line.height, line.distanceToShelf, line.shelfType, line.shelfFlag);
 

@@ -411,10 +411,10 @@ namespace LibRobotAuto.Module
             /* 按文件最后修改时间降序 */
             var look = (from f in Directory.EnumerateFiles(dataPath)
                         let ff = new FileInfo(f)
-                        where ff.CreationTime > dt.AddSeconds(1)
+                        where ff.CreationTime > dt.AddMilliseconds(1)
                         orderby ff.CreationTime ascending
                         select ff.Name
-                        ).Take(2);
+                        ).Take(4);
             /* 得到最新文件名 */
             List<string> names = look.ToList();
             if (names.Count < 1) { return null; }
@@ -563,9 +563,9 @@ namespace LibRobotAuto.Module
                         continue;
                     }
 
-                    /* 若没有失败文件则过1min后检查一下目录 */
+                    /* 若没有失败文件则过20秒后检查一下目录 */
                     string[] dirs = Directory.GetDirectories(Helper.failedRootPath);
-                    if (dirs.Count() < 1) { Thread.Sleep(60000); continue; }
+                    if (dirs.Count() < 1) { Thread.Sleep(20000); continue; }
 
 
                     List<string> dirList = dirs.Select(s => s.Remove(0, Helper.failedRootPath.Length + 1)).ToList();
