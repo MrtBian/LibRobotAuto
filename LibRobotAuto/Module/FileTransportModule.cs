@@ -17,8 +17,7 @@ namespace LibRobotAuto.Module
         public static AutoResetEvent endFileEvent = new AutoResetEvent(false); /* 用于线程间同步 */
 
         private static readonly object dtLock = new object();
-        //public static string remoteIpAndPort = "http://47.100.185.147:8085";
-        public static string remoteIpAndPort = UserConfig.remoteIpAndPort;
+        public static string remoteIpAndPort = "http://47.100.185.147:8085";
         public static bool endres = false;
         public static bool taskcancel = false;
         public const string endFileName = "end";
@@ -32,6 +31,13 @@ namespace LibRobotAuto.Module
 
         public static void reserveRecentNFolders(string path)
         {
+            //只保留最近2次数据
+            int maxFolderCap = UserConfig.maxFolderCapacity > 2 ? 2 : UserConfig.maxFolderCapacity;
+            if (maxFolderCap <= 0)
+            {
+                maxFolderCap = 2;
+            }
+
             DirectoryInfo di = new DirectoryInfo(path);
             if (!di.Exists)
             {
@@ -44,7 +50,7 @@ namespace LibRobotAuto.Module
             foreach (DirectoryInfo dir in directories)
             {
                 if (!new FileInfo(dir + "\\" + endFileName).Exists) { continue; }
-                if (i < UserConfig.maxFolderCapacity) { i++; }
+                if (i <= maxFolderCap) { i++; }
                 else { dir.Delete(true); }
             }
         }
@@ -70,10 +76,57 @@ namespace LibRobotAuto.Module
 
         }
 
+        public static void deleteFile(string file)
+        {
+            try
+            {
+                if (File.Exists(file))
+                {
+                    // If file found, delete it    
+                    File.Delete(file);
+                }
+            }
+            catch (Exception e)
+            {
+                Log.error("[Helper.deleteFile method]  Exception:  " + e.ToString());
+            }
+        }
+
+        public static void emptyFolder(string folderPath)
+        {
+
+            System.IO.DirectoryInfo di = new DirectoryInfo(folderPath);
+
+            if (di == null)
+            {
+                Log.error("[Helper.emptyFolder method]  Error:  " + folderPath + "does not exists");
+                return;
+            }
+
+            try
+            {
+                foreach (DirectoryInfo dir in di.GetDirectories())
+                {
+                    dir.Delete(true);
+                }
+
+                foreach (FileInfo file in di.GetFiles())
+                {
+                    file.Delete();
+                }
+            }
+            catch (Exception e)
+            {
+                Log.error("[Helper.emptyFolder method]  Exception:  " + e.ToString());
+            }
+
+        }
+
         public static DateTime opDateFile(string mode, DateTime _dt)
         {
             mode = mode.ToLower();
             DateTime dt = _dt;
+
             lock (dtLock)
             {
                 if (mode.Equals("r"))
@@ -93,7 +146,7 @@ namespace LibRobotAuto.Module
     //    public static string SchoolCode = "WHU";
     //    public static string RobotNumber = "4";
     //    public static bool NEW = false;
-    //    public const int maxFolderCapacity = 3;
+    //    public static int maxFolderCapacity = 3;
     //}
 
 
@@ -334,7 +387,7 @@ namespace LibRobotAuto.Module
                         }
 
 
-                        Log.info("[FileTransfer.reTransfer method] Success: " + String.Join(",", pkg.fileNames));
+                        Log.info("[FileTransfer.reTransfer method] Success:  path: " + pkg.filePath + "  files: " + String.Join(",", pkg.fileNames));
                         return;
                     }
                 }
@@ -728,13 +781,19 @@ namespace LibRobotAuto.Module
             string r_path = UserConfig.rootPath + "\\data\\";
             Helper.reserveRecentNFolders(r_path);
 
+            /* 清空 上一次失败的.dat文件 */
+            Helper.emptyFolder(Helper.failedRootPath);
+            /* 清空 上一次失败的.res文件 */
+            Helper.emptyFolder(Helper.resFailedPath);
+            /* 删除lastdata.f文件 */
+            Helper.deleteFile(Helper.configPath + "\\" + Helper.dtFileName);
+
             /* 各个线程只运行一次 */
             if (!one_time) { return; }
             Log.info("[FileTransportModule.Run] Starting a new inventory now");
             try
             {
                 one_time = false;
-
 
                 Thread ft = new Thread(() => new FileTransfer(Helper.dtFileName).run());
                 ft.Start();

@@ -1023,20 +1023,24 @@ namespace LibRobotAuto.Core
         private int ScanShelf(LibraryRouteLine line)
         {
             //港中文对上半部分四天线 添加处理逻辑
-            upperReader.Disconnect();
+            //upperReader.Disconnect();
+            upperReader.Stop();
             //upperReader.Connect(UserConfig.UpperReaderHostname);
             if (line.height==LiftStatus.LowLevel)
             {
                 bool[] port =new bool[4] { true, true, false, false };
-                upperReader.Connect(UserConfig.UpperReaderHostname, port);
+                upperReader.ConfigSettings(UserConfig.UpperReaderHostname, port);
+                //upperReader.Connect(UserConfig.UpperReaderHostname, port);
                 //upperReader.ConfigSettings(UserConfig.UpperReaderHostname, port);
-              
+
             } else {
                 bool[] port = new bool[4] { false,false,true,true };
-                upperReader.Connect(UserConfig.UpperReaderHostname, port);
+                upperReader.ConfigSettings(UserConfig.UpperReaderHostname, port);
+                //upperReader.Connect(UserConfig.UpperReaderHostname, port);
                 //upperReader.ConfigSettings(UserConfig.UpperReaderHostname, port);
             }
-            
+
+            upperReader.Start();
 
             mobilePlatform.ScanShelf(line.startPoint, line.endPoint, line.height, line.distanceToShelf, line.shelfType, line.shelfFlag);
 
