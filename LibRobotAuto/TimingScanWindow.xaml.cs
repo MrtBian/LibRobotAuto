@@ -101,7 +101,7 @@ namespace LibRobotAuto
             int intMinute = e.SignalTime.Minute;            
 
             // 设置　固定时间开始执行程序  
-            if (intHour == scanHour && intMinute == scanMinute)
+            if (intHour == scanHour && intMinute == scanMinute && UserConfig.AutoRunning)
             {
                 timer.Stop();
                 if (UserConfig.RobotRunning)

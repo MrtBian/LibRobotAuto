@@ -26,7 +26,6 @@ namespace LibRobotAuto.Module
         public static string SendName = "TOOKER";
         //public static string[] To = new string[] { "netlab624@163.com" };
         public static string[] ToSchool = UserConfig.ToList.ToArray();
-        public static string[] To = new string[] { "netlab624@163.com" };
 
         private static int TRY_SEND = 3;
 
@@ -53,9 +52,13 @@ namespace LibRobotAuto.Module
             Mail = new MailMessage();
             Mail.From = new MailAddress(Username, SendName);
 
-            foreach (var t in To)
-                Mail.To.Add(t);
-
+            if (UserConfig.EnableMail)
+            {
+                foreach (var t in ToSchool)
+                {
+                    Mail.To.Add(t);
+                }
+            }
             Mail.Subject = Subject;
             Mail.Body = no + "号" + Body;
             Mail.IsBodyHtml = true;
@@ -77,9 +80,13 @@ namespace LibRobotAuto.Module
             Mail = new MailMessage();
             Mail.From = new MailAddress(Username, SendName);
 
-            foreach (var t in To)
-                Mail.To.Add(t);
-
+            if (UserConfig.EnableMail)
+            {
+                foreach (var t in ToSchool)
+                {
+                    Mail.To.Add(t);
+                }
+            }
             Mail.Subject = Subject;
             Mail.Body = Body;
             Mail.IsBodyHtml = true;
@@ -101,10 +108,6 @@ namespace LibRobotAuto.Module
             Mail = new MailMessage();
             Mail.From = new MailAddress(Username, SendName);
 
-            foreach (var t in To)
-            {
-                Mail.To.Add(t);
-            }
             if (UserConfig.EnableMail)
             {
                 foreach (var t in ToSchool)

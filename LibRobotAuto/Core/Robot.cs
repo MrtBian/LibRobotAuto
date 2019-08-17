@@ -389,13 +389,13 @@ namespace LibRobotAuto.Core
              */
         private void LoadMapInfosAndRoute()
         {
-            Trace.TraceInformation("load map positions in MapPositions_whu_" + ScanFloor + "_v2.txt");
+            Trace.TraceInformation("load map positions in MapPositions_" + UserConfig.SchoolCode + "_" + ScanFloor + "_v2.txt");
             LoadMapPositions("MapPositions_"+ UserConfig.SchoolCode + "_" + ScanFloor + "_v2.txt");
 
-            Trace.TraceInformation("load route in Route_full_whu_" + ScanFloor + ".txt");
+            Trace.TraceInformation("load route in Route_full_" + UserConfig.SchoolCode + "_" + ScanFloor + ".txt");
             LoadFullRoute("Route_full_" + UserConfig.SchoolCode + "_" + ScanFloor + ".txt");
 
-            Trace.TraceInformation("load shelf route in Route_part_whu_" + ScanFloor + ".txt");
+            Trace.TraceInformation("load shelf route in Route_part_" + UserConfig.SchoolCode + "_" + ScanFloor + ".txt");
             LoadShelfRoute("Route_part_" + UserConfig.SchoolCode + "_" + ScanFloor + ".txt");
 
             Trace.TraceInformation("route load success!");
@@ -1054,28 +1054,8 @@ namespace LibRobotAuto.Core
         /// </summary>
         /// <param name="line">library route line</param>
         /// <returns>scan result</returns>
-                                    private int ScanShelf(LibraryRouteLine line)
+        private int ScanShelf(LibraryRouteLine line)
         {
-            //港中文对上半部分四天线 添加处理逻辑
-            //upperReader.Disconnect();
-            upperReader.Stop();
-            //upperReader.Connect(UserConfig.UpperReaderHostname);
-            if (line.height==LiftStatus.LowLevel)
-            {
-                bool[] port =new bool[4] { true, true, false, false };
-                upperReader.ConfigSettings(UserConfig.UpperReaderHostname, port);
-                //upperReader.Connect(UserConfig.UpperReaderHostname, port);
-                //upperReader.ConfigSettings(UserConfig.UpperReaderHostname, port);
-
-            } else {
-                bool[] port = new bool[4] { false,false,true,true };
-                upperReader.ConfigSettings(UserConfig.UpperReaderHostname, port);
-                //upperReader.Connect(UserConfig.UpperReaderHostname, port);
-                //upperReader.ConfigSettings(UserConfig.UpperReaderHostname, port);
-            }
-
-            //upperReader.Start();
-
             mobilePlatform.ScanShelf(line.startPoint, line.endPoint, line.height, line.distanceToShelf, line.shelfType, line.shelfFlag);
 
             while (!mobilePlatform.AtStartPoint)
@@ -1143,6 +1123,17 @@ namespace LibRobotAuto.Core
             return 0;
         }
 
+
+        /*
+         * 这里有些乱，来整理一下
+         * 没柱子的时候：
+         *      在机器人进入书架之前，机器人一侧与书架相接，整个机身在书架外。从该位置到机器人完全进入书架
+         *      需要一段时间，这段时间内读取的数据我们是丢弃的，所以需要设置一个延迟时间，把这段时间内读取
+         *      的数据丢弃
+         * 有柱子的时候：
+         *      可以参照书架类型6，进入侧有柱子，此时机器人就处于书架内部，所以从开始读取的信息即为需要的信息，
+         *      因此我们不需要延迟时间，将其设置为0
+         */
         private int ComputeEnterShelfDelayTime()
         {
             if (mobilePlatform.EnterSidePillarExist)

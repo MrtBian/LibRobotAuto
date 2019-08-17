@@ -103,6 +103,7 @@ namespace LibRobotAuto.Module
                 return;
             }
 
+
             try
             {
                 foreach (DirectoryInfo dir in di.GetDirectories())

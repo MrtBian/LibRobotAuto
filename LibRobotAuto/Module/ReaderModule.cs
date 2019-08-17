@@ -57,27 +57,27 @@ namespace LibRobotAuto.Module
             return true;
         }
 
-        //针对四天线情况重载connect
-        public bool Connect(string hostname, bool[] port)
-        {
-            hostName = hostname;
-            if (!impinjReader.IsConnected)
-            {
-                try
-                {
-                    impinjReader.Connect(hostname);
-                    ConfigSettings(hostname, port);
-                    //impinjReader.TagsReported += OnTagsReported;  //多个监听数据冗余
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                    return false;
-                }
-            }
+        ////针对四天线情况重载connect
+        //public bool Connect(string hostname, bool[] port)
+        //{
+        //    hostName = hostname;
+        //    if (!impinjReader.IsConnected)
+        //    {
+        //        try
+        //        {
+        //            impinjReader.Connect(hostname);
+        //            ConfigSettings(hostname, port);
+        //            //impinjReader.TagsReported += OnTagsReported;  //多个监听数据冗余
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            MessageBox.Show(ex.Message);
+        //            return false;
+        //        }
+        //    }
 
-            return true;
-        }
+        //    return true;
+        //}
 
         // 断开阅读器
         public void Disconnect()
@@ -98,7 +98,7 @@ namespace LibRobotAuto.Module
             settings.Report.IncludePeakRssi = true;
             settings.Report.IncludePhaseAngle = false;
             settings.Report.IncludeFirstSeenTime = true;
-            settings.Report.IncludeFastId = false;
+            settings.Report.IncludeFastId = true;
             settings.Report.IncludeAntennaPortNumber = true;
             //settings.Report.IncludeChannel = true;
             settings.Report.Mode = ReportMode.Individual;
@@ -143,62 +143,62 @@ namespace LibRobotAuto.Module
         }
 
         //重载  用于解决不开所有天线端口的情况
-        public void ConfigSettings(string hostname,bool[] port)
-        {
-            Settings settings = impinjReader.QueryDefaultSettings();
+        //public void ConfigSettings(string hostname,bool[] port)
+        //{
+        //    Settings settings = impinjReader.QueryDefaultSettings();
 
-            // 常规
-            settings.Report.IncludePeakRssi = true;
-            settings.Report.IncludePhaseAngle = false;
-            settings.Report.IncludeFirstSeenTime = true;
-            settings.Report.IncludeFastId = false;
-            settings.Report.IncludeAntennaPortNumber = true;
-            //settings.Report.IncludeChannel = true;
-            settings.Report.Mode = ReportMode.Individual;
+        //    // 常规
+        //    settings.Report.IncludePeakRssi = true;
+        //    settings.Report.IncludePhaseAngle = false;
+        //    settings.Report.IncludeFirstSeenTime = true;
+        //    settings.Report.IncludeFastId = false;
+        //    settings.Report.IncludeAntennaPortNumber = true;
+        //    //settings.Report.IncludeChannel = true;
+        //    settings.Report.Mode = ReportMode.Individual;
 
-            settings.ReaderMode = ReaderMode.MaxThroughput;
-            settings.SearchMode = SearchMode.DualTarget;
-            settings.TagPopulationEstimate = 128;
-            settings.Session = 1;
+        //    settings.ReaderMode = ReaderMode.MaxThroughput;
+        //    settings.SearchMode = SearchMode.DualTarget;
+        //    settings.TagPopulationEstimate = 128;
+        //    settings.Session = 1;
 
-            if (hostname.Equals(UserConfig.UpperReaderHostname))
-            {
-                //settings.TxFrequenciesInMhz.Add(920.625);
-                //settings.TxFrequenciesInMhz.Add(920.875);
-                //settings.TxFrequenciesInMhz.Add(921.125);
-                //settings.TxFrequenciesInMhz.Add(921.375);
-                settings.TxFrequenciesInMhz.Add(921.625);
-                //settings.TxFrequenciesInMhz.Add(921.875);
-            }
-            else
-            {
-                //settings.TxFrequenciesInMhz.Add(920.625);
-                //settings.TxFrequenciesInMhz.Add(923.125);
-                //settings.TxFrequenciesInMhz.Add(923.375);
-                settings.TxFrequenciesInMhz.Add(923.625);
-                //settings.TxFrequenciesInMhz.Add(923.875);
-                //settings.TxFrequenciesInMhz.Add(924.125);
-                //settings.TxFrequenciesInMhz.Add(924.375);
-            }
+        //    if (hostname.Equals(UserConfig.UpperReaderHostname))
+        //    {
+        //        //settings.TxFrequenciesInMhz.Add(920.625);
+        //        //settings.TxFrequenciesInMhz.Add(920.875);
+        //        //settings.TxFrequenciesInMhz.Add(921.125);
+        //        //settings.TxFrequenciesInMhz.Add(921.375);
+        //        settings.TxFrequenciesInMhz.Add(921.625);
+        //        //settings.TxFrequenciesInMhz.Add(921.875);
+        //    }
+        //    else
+        //    {
+        //        //settings.TxFrequenciesInMhz.Add(920.625);
+        //        //settings.TxFrequenciesInMhz.Add(923.125);
+        //        //settings.TxFrequenciesInMhz.Add(923.375);
+        //        settings.TxFrequenciesInMhz.Add(923.625);
+        //        //settings.TxFrequenciesInMhz.Add(923.875);
+        //        //settings.TxFrequenciesInMhz.Add(924.125);
+        //        //settings.TxFrequenciesInMhz.Add(924.375);
+        //    }
 
-            // 天线
-            List<ushort> antennaPorts = new List<ushort>();
-            for (int i=0;i<4;i++)
-            {
-                if (port[i])
-                    antennaPorts.Add((ushort)(i+1));
-            }
-            //antennaPorts.Add(2);
-            //settings.Antennas.EnableAll();
-            settings.Antennas.DisableAll();
-            settings.Antennas.EnableById(antennaPorts);
+        //    // 天线
+        //    List<ushort> antennaPorts = new List<ushort>();
+        //    for (int i=0;i<4;i++)
+        //    {
+        //        if (port[i])
+        //            antennaPorts.Add((ushort)(i+1));
+        //    }
+        //    //antennaPorts.Add(2);
+        //    //settings.Antennas.EnableAll();
+        //    settings.Antennas.DisableAll();
+        //    settings.Antennas.EnableById(antennaPorts);
 
-            settings.Antennas.TxPowerInDbm = UserConfig.MaxPower;
-            settings.Antennas.RxSensitivityMax = true;
+        //    settings.Antennas.TxPowerInDbm = UserConfig.MaxPower;
+        //    settings.Antennas.RxSensitivityMax = true;
 
-            settings.Save("Config_I&Q\\ReaderSettings.json");
-            impinjReader.ApplySettings(settings);
-        }
+        //    settings.Save("Config_I&Q\\ReaderSettings.json");
+        //    impinjReader.ApplySettings(settings);
+        //}
 
         public void ClearTags()
         {
@@ -239,7 +239,7 @@ namespace LibRobotAuto.Module
             RawTagInfo temp = new RawTagInfo();
 
             temp.time = tag.FirstSeenTime.Utc;
-            temp.epc = tag.Epc.ToHexString();
+            temp.epc = tag.Tid.ToHexString();
             temp.rssi = tag.PeakRssiInDbm;
             temp.antennaPortNum = tag.AntennaPortNumber;
 
