@@ -395,8 +395,8 @@ namespace LibRobotAuto.Core
             Trace.TraceInformation("load route in Route_full_" + UserConfig.SchoolCode + "_" + ScanFloor + ".txt");
             LoadFullRoute("Route_full_" + UserConfig.SchoolCode + "_" + ScanFloor + ".txt");
 
-            Trace.TraceInformation("load shelf route in Route_part_" + UserConfig.SchoolCode + "_" + ScanFloor + ".txt");
-            LoadShelfRoute("Route_part_" + UserConfig.SchoolCode + "_" + ScanFloor + ".txt");
+            //Trace.TraceInformation("load shelf route in Route_part_" + UserConfig.SchoolCode + "_" + ScanFloor + ".txt");
+            //LoadShelfRoute("Route_part_" + UserConfig.SchoolCode + "_" + ScanFloor + ".txt");
 
             Trace.TraceInformation("route load success!");
 
