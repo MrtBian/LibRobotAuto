@@ -135,6 +135,15 @@ namespace LibRobotAuto.Module
         }
 
         /// <summary>
+        /// 将升降杆将至最低层次扫描
+        /// </summary>
+        public void FallingLifter()
+        {
+            OccupyMobileCar();
+            mobileCar.basicOperation.ControlRfidHeight(0x00, 0x00);
+        }
+
+        /// <summary>
         /// update by wing in 18/11/13
         /// add param 'shelfType'
         /// update by wing in 19/1/9
@@ -394,7 +403,18 @@ namespace LibRobotAuto.Module
                     }
                     break;
                 case 3:
-                    // 图书凸出扫描任务执行结果,暂不使用
+                    // 升降杆执行结果 
+                    if (noticeInfo.noticeCode == 0)
+                    {
+                        Trace.TraceInformation("fall lifter finished.");
+                        ReleaseMobileCar();
+                    }
+                    else if (noticeInfo.noticeCode == 1)
+                    {
+                        Trace.TraceError("fall lifter failed!");
+                        ReleaseMobileCar();
+                        FallingLifter();
+                    }
                     break;
                 case 4:
                     // 书架扫面任务执行结果

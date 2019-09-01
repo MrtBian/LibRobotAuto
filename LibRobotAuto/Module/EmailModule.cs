@@ -184,8 +184,11 @@ namespace LibRobotAuto.Module
         public static void Main(string[] args)
         {
             //方法体
+            long time = DateTime.Now.Millisecond;
             EmailModule email = new EmailModule();
             email.trySendEmail("Test", "这是一封测试邮件，请无视");
+            time = DateTime.Now.Millisecond- time;
+            Console.WriteLine(time+"");
         }
     }
 }

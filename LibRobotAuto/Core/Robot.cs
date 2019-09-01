@@ -655,6 +655,11 @@ namespace LibRobotAuto.Core
 
                 if (line.lineType == MapLineType.Move)
                 {
+                    //判断是否跨区扫描
+                    if(!line.startPoint.PositionNo.Substring(0,1).Equals(line.endPoint.PositionNo.Substring(0, 1)))
+                    {
+                        mobilePlatform.FallingLifter();
+                    }
                     ExecuteMoveCommand(line.startPoint, line.endPoint, ref isSkipToNextShelf);
                     positionBeforeScan = line.startPoint;
                 }
@@ -664,6 +669,17 @@ namespace LibRobotAuto.Core
                 }
                 else if (line.lineType == MapLineType.Charge)
                 {
+                    //回到初始点0000
+                    MyRobotPosition s = new MyRobotPosition();
+                    MyRobotPosition e = new MyRobotPosition();
+                    s.PositionNo = "0000";
+                    s.Position = new RobotPosition();
+                    e.PositionNo = "0000";
+                    e.Position = new RobotPosition();
+                    MapPositions.TryGetValue("0000", out s.Position);
+                    MapPositions.TryGetValue("0000", out e.Position);
+                    ExecuteMoveCommand(s, e, ref isSkipToNextShelf);
+                    mobilePlatform.FallingLifter();
                     int chargeTime = Convert.ToInt32(line.startPoint.PositionNo);
                     mobilePlatform.ExecuteCharge(chargeTime);
                 }
