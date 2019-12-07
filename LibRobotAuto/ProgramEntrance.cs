@@ -106,7 +106,7 @@ namespace LibRobotAuto
                 Thread thread = new Thread(LockScreen);
                 thread.Start();
             }
-            Thread threadShutDown = new Thread(CheckReportEnd); ;
+            Thread threadShutDown = new Thread(CheckReportEnd);
             threadShutDown.Start();
             LibRobotAuto.App app = new LibRobotAuto.App();//WPF项目的Application实例，用来启动WPF项目的
             app.InitializeComponent();

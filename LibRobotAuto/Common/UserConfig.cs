@@ -90,6 +90,9 @@ namespace LibRobotAuto.Common
         // 扫描书架超时时间，单位毫秒
         public static int scanShelfTimeout = 600000;
 
+        // 设置中楼层
+        public static Dictionary<string, string> FloorTextDic = new Dictionary<string, string>();
+
         //public static bool NEW = false;
         public static AutoResetEvent autoResetEvent = new AutoResetEvent(false);
 
@@ -191,6 +194,17 @@ namespace LibRobotAuto.Common
                 }
                 EmailHost = xnl.Item(4).InnerText.ToString();
                 EmailPort = System.Convert.ToInt32(xnl.Item(5).InnerText.ToString());
+
+                // Get FloorText config
+                xn1 = xn.SelectSingleNode("FloorListConfig");
+                xnl = xn1.ChildNodes;
+                int NumOfFloor = xnl.Count;
+                for (int i = 0; i < NumOfFloor; i++)
+                {
+                    string name = xnl.Item(i).Attributes["name"].Value;
+                    string value = xnl.Item(i).InnerText;
+                    FloorTextDic.Add(name, value);
+                }
             }
             catch (XmlException e)
             {

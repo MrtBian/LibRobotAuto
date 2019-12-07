@@ -30,14 +30,10 @@ namespace LibRobotAuto
             InitializeComponent();
 
             List<CategoryInfo> categoryList = new List<CategoryInfo>();
-
-            //categoryList.Add(new CategoryInfo { Name = "A栋二楼", Value = "A2" });
-            //categoryList.Add(new CategoryInfo { Name = "A栋三楼", Value = "A3" });
-            categoryList.Add(new CategoryInfo { Name = "三楼", Value = "A3" });
-            categoryList.Add(new CategoryInfo { Name = "四楼", Value = "A4" });
-            //categoryList.Add(new CategoryInfo { Name = "四楼二列", Value = "A2" });
-            //categoryList.Add(new CategoryInfo { Name = "四楼三列", Value = "A3" });
-            //categoryList.Add(new CategoryInfo { Name = "A栋五楼", Value = "A5" });
+            foreach(var dic in UserConfig.FloorTextDic)
+            {
+                categoryList.Add(new CategoryInfo { Name = dic.Key, Value = dic.Value });
+            }
             CheckBox_Auto.IsChecked = UserConfig.AutoRunning;
             Check_Email.IsChecked = UserConfig.EnableMail;
 

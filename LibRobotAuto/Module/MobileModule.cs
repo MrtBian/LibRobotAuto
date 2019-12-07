@@ -139,8 +139,10 @@ namespace LibRobotAuto.Module
         /// </summary>
         public void FallingLifter()
         {
+            Trace.TraceInformation("falling lifter");
             OccupyMobileCar();
             mobileCar.basicOperation.ControlRfidHeight(0x00, 0x00);
+            ReleaseMobileCar();
         }
 
         /// <summary>
@@ -159,29 +161,6 @@ namespace LibRobotAuto.Module
         {
             //下位机程序需要的书架信息
             byte shelfFlag = flag;
-            string tmp = shelfType.Substring(0, 1);
-            if (shelfFlag == 0x01)
-            {
-                if (tmp.CompareTo("S") == 0 || tmp.CompareTo("T") == 0)
-                {
-                    shelfFlag = 0x03;
-                }
-                if (tmp.CompareTo("D") == 0)
-                {
-                    shelfFlag = 0x02;
-                }
-
-                if (UserConfig.FloorDefaultSelectedIndex == 3)
-                {
-                    //五楼过道过窄，所以1，3两列书架信息均为0x03
-                    tmp = startPoint.PositionNo.Substring(0, 1);
-                    if (tmp.CompareTo("1") == 0 || tmp.CompareTo("3") == 0)
-                    {
-                        shelfFlag = 0x03;
-                    }
-                }
-            }
-
             int result;
 
             WaitUntilIdle();
