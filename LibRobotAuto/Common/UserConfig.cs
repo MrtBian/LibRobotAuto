@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows;
@@ -8,6 +7,8 @@ using System.Collections.Generic;
 using System.Xml.XPath;
 using LibRobotAuto.Module;
 using LibRobotAuto.Core;
+using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace LibRobotAuto.Common
 {
@@ -31,10 +32,12 @@ namespace LibRobotAuto.Common
 
         public static bool UpperReaderEnable = true;
         public static bool BottomReaderEnable = true;
+        public static string ReaderMode = "EPC";
 
-        // Shelf config
+        // Shelves config
+
+        public static Dictionary<string, Dictionary<string,ushort>> ShelvesConfig = new Dictionary<string, Dictionary<string, ushort>>();
         public static ushort LayerCount = 6;
-
         public static ushort LifterHeightOffset = 0;
         public static ushort BottomLifterBaseHeight = 65;
         public static ushort UpperLifterBaseHeight = 1050;
@@ -129,34 +132,53 @@ namespace LibRobotAuto.Common
                 MinPower = System.Convert.ToDouble(xnl.Item(4).InnerText.ToString());
                 UpperReaderEnable = (xnl.Item(5).InnerText.ToString() == "True") ? true : false;
                 BottomReaderEnable = (xnl.Item(6).InnerText.ToString() == "True") ? true : false;
+                ReaderMode = xnl.Item(7).InnerText.ToString();
 
                 // Get shelf config
-                xn1 = xn.ChildNodes.Item(2);
+                xn1 = xn.SelectSingleNode("ShelvesConfig");
                 xnl = xn1.ChildNodes;
-                LayerCount = System.Convert.ToUInt16(xnl.Item(0).InnerText.ToString());
-                LifterHeightOffset = System.Convert.ToUInt16(xnl.Item(1).InnerText.ToString());
-                BottomLifterBaseHeight = System.Convert.ToUInt16(xnl.Item(2).InnerText.ToString());
-                UpperLifterBaseHeight = System.Convert.ToUInt16(xnl.Item(3).InnerText.ToString());
+                int NumOfShelvesConfig = xnl.Count;
+                for (int i = 0; i < NumOfShelvesConfig; i++)
+                {
+                    string regexp = xnl.Item(i).Attributes["regexp"].Value;
+                    Dictionary<string, ushort> shelfconfig = new Dictionary<string, ushort>();
+                    XmlNode xn2 = xn1.SelectSingleNode("ShelfConfig");
+                    XmlNodeList xnl2 = xn2.ChildNodes;
+                    int NumOfShelfConfig = xnl2.Count;
+                    for (int j = 0; j < NumOfShelvesConfig; j++)
+                    {
+                        string name = xnl2.Item(j).Name;
+                        ushort value = Convert.ToUInt16(xnl2.Item(j).InnerText.ToString());
+                        shelfconfig.Add(name, value);
+                    }
+                    ShelvesConfig.Add(regexp, shelfconfig);
+                }
+                //xn1 = xn.ChildNodes.Item(2);
+                //xnl = xn1.ChildNodes;
+                //LayerCount = System.Convert.ToUInt16(xnl.Item(0).InnerText.ToString());
+                //LifterHeightOffset = System.Convert.ToUInt16(xnl.Item(1).InnerText.ToString());
+                //BottomLifterBaseHeight = System.Convert.ToUInt16(xnl.Item(2).InnerText.ToString());
+                //UpperLifterBaseHeight = System.Convert.ToUInt16(xnl.Item(3).InnerText.ToString());
 
-                FirstLayerRelativeHeight = System.Convert.ToUInt16(xnl.Item(4).InnerText.ToString());
-                SecondLayerRelativeHeight = System.Convert.ToUInt16(xnl.Item(5).InnerText.ToString());
-                ThirdLayerRelativeHeight = System.Convert.ToUInt16(xnl.Item(6).InnerText.ToString());
-                FourthLayerRelativeHeight = System.Convert.ToUInt16(xnl.Item(7).InnerText.ToString());
-                FifthLayerRelativeHeight = System.Convert.ToUInt16(xnl.Item(8).InnerText.ToString());
-                SixthLayerRelativeHeight = System.Convert.ToUInt16(xnl.Item(9).InnerText.ToString());
-                SixthLayerAbsoluteHeight = (ushort)(BottomLifterBaseHeight + LifterHeightOffset + FirstLayerRelativeHeight);
-                FifthLayerAbsoluteHeight = (ushort)(BottomLifterBaseHeight + LifterHeightOffset + SecondLayerRelativeHeight);
-                FourthLayerAbsoluteHeight = (ushort)(BottomLifterBaseHeight + LifterHeightOffset + ThirdLayerRelativeHeight);
-                ThirdLayerAbsoluteHeight = (ushort)(UpperLifterBaseHeight + LifterHeightOffset + FourthLayerRelativeHeight);
-                SecondLayerAbsoluteHeight = (ushort)(UpperLifterBaseHeight + LifterHeightOffset + FifthLayerRelativeHeight);
-                FirstLayerAbsoluteHeight = (ushort)(UpperLifterBaseHeight + LifterHeightOffset + SixthLayerRelativeHeight);
+                //FirstLayerRelativeHeight = System.Convert.ToUInt16(xnl.Item(4).InnerText.ToString());
+                //SecondLayerRelativeHeight = System.Convert.ToUInt16(xnl.Item(5).InnerText.ToString());
+                //ThirdLayerRelativeHeight = System.Convert.ToUInt16(xnl.Item(6).InnerText.ToString());
+                //FourthLayerRelativeHeight = System.Convert.ToUInt16(xnl.Item(7).InnerText.ToString());
+                //FifthLayerRelativeHeight = System.Convert.ToUInt16(xnl.Item(8).InnerText.ToString());
+                //SixthLayerRelativeHeight = System.Convert.ToUInt16(xnl.Item(9).InnerText.ToString());
+                //SixthLayerAbsoluteHeight = (ushort)(BottomLifterBaseHeight + LifterHeightOffset + FirstLayerRelativeHeight);
+                //FifthLayerAbsoluteHeight = (ushort)(BottomLifterBaseHeight + LifterHeightOffset + SecondLayerRelativeHeight);
+                //FourthLayerAbsoluteHeight = (ushort)(BottomLifterBaseHeight + LifterHeightOffset + ThirdLayerRelativeHeight);
+                //ThirdLayerAbsoluteHeight = (ushort)(UpperLifterBaseHeight + LifterHeightOffset + FourthLayerRelativeHeight);
+                //SecondLayerAbsoluteHeight = (ushort)(UpperLifterBaseHeight + LifterHeightOffset + FifthLayerRelativeHeight);
+                //FirstLayerAbsoluteHeight = (ushort)(UpperLifterBaseHeight + LifterHeightOffset + SixthLayerRelativeHeight);
 
-                DistanceToBookshelf = System.Convert.ToByte(xnl.Item(10).InnerText.ToString());
+                //DistanceToBookshelf = System.Convert.ToByte(xnl.Item(10).InnerText.ToString());
 
                 // Get other config
                 xn1 = xn.ChildNodes.Item(3);
                 xnl = xn1.ChildNodes;
-                FloorDefaultSelectedIndex = System.Convert.ToInt32(xnl.Item(0).InnerText.ToString());
+                FloorDefaultSelectedIndex = Convert.ToInt32(xnl.Item(0).InnerText.ToString());
                 SchoolCode = xnl.Item(1).InnerText.ToString();
                 RobotNumber = xnl.Item(2).InnerText.ToString();
                 ChargingTime = System.Convert.ToInt32(xnl.Item(3).InnerText.ToString());
@@ -218,6 +240,57 @@ namespace LibRobotAuto.Common
             email = new EmailModule();
         }
 
+        public static void SetAbsoluteHeight(String startPoint)
+        {
+            Dictionary<string, ushort> shelfConfig = GetShelfConfig(startPoint);
+            shelfConfig.TryGetValue("LifterHeightOffset",out LifterHeightOffset);
+            shelfConfig.TryGetValue("BottomLifterBaseHeight", out BottomLifterBaseHeight);
+            shelfConfig.TryGetValue("UpperLifterBaseHeight", out UpperLifterBaseHeight);
+            shelfConfig.TryGetValue("FirstLayerRelativeHeight", out FirstLayerRelativeHeight);
+            shelfConfig.TryGetValue("SecondLayerRelativeHeight", out SecondLayerRelativeHeight);
+            shelfConfig.TryGetValue("ThirdLayerRelativeHeight", out ThirdLayerRelativeHeight);
+            shelfConfig.TryGetValue("FourthLayerRelativeHeight", out FourthLayerRelativeHeight);
+            shelfConfig.TryGetValue("FifthLayerRelativeHeight", out FifthLayerRelativeHeight);
+            shelfConfig.TryGetValue("SixthLayerRelativeHeight", out SixthLayerRelativeHeight);
+            SixthLayerAbsoluteHeight = (ushort)(BottomLifterBaseHeight + LifterHeightOffset + SixthLayerRelativeHeight);
+            FifthLayerAbsoluteHeight = (ushort)(BottomLifterBaseHeight + LifterHeightOffset + FifthLayerRelativeHeight);
+            FourthLayerAbsoluteHeight = (ushort)(BottomLifterBaseHeight + LifterHeightOffset + FourthLayerRelativeHeight);
+            ThirdLayerAbsoluteHeight = (ushort)(UpperLifterBaseHeight + LifterHeightOffset + ThirdLayerRelativeHeight);
+            SecondLayerAbsoluteHeight = (ushort)(UpperLifterBaseHeight + LifterHeightOffset + SecondLayerRelativeHeight);
+            FirstLayerAbsoluteHeight = (ushort)(UpperLifterBaseHeight + LifterHeightOffset + FirstLayerRelativeHeight);
+        }
+        public static int GetLayerCount(String startPoint)
+        {
+            Dictionary<string, ushort> shelfConfig = GetShelfConfig(startPoint);
+            ushort count = 6;
+            try
+            {
+                shelfConfig.TryGetValue("LayerCount",out count);
+            }
+            catch(Exception e)
+            {
+                Trace.TraceError(e.Message.ToString());
+            }
+            return count;
+        }
+        private static Dictionary<string,ushort> GetShelfConfig(String startPoint)
+        {
+            Dictionary<string, ushort> firstDic = null;
+            foreach(var dic in ShelvesConfig)
+            {
+                if (firstDic == null)
+                {
+                    firstDic = dic.Value;
+                }
+                string regexp = dic.Key;
+                Regex rgx = new Regex(regexp);
+                if (rgx.IsMatch(startPoint))
+                {
+                    return dic.Value;
+                }
+            }
+            return firstDic;
+        }
         public static void SaveUserConfig()
         {
             XmlNodeList xnl_DatabaseConfig = xmlDoc.SelectSingleNode("UserConfig").ChildNodes.Item(0).ChildNodes;
@@ -235,18 +308,18 @@ namespace LibRobotAuto.Common
             XmlNode xn_UpperReaderEnable = xnl_ReaderConfig.Item(5);
             XmlNode xn_BottomReaderEnable = xnl_ReaderConfig.Item(6);
 
-            XmlNodeList xnl_ShelfConfig = xmlDoc.SelectSingleNode("UserConfig").ChildNodes.Item(2).ChildNodes;
-            XmlNode xn_LayerCount = xnl_ShelfConfig.Item(0);
-            XmlNode xn_LifterHeightOffset = xnl_ShelfConfig.Item(1);
-            XmlNode xn_BottomLifterBaseHeight = xnl_ShelfConfig.Item(2);
-            XmlNode xn_UpperLifterBaseHeight = xnl_ShelfConfig.Item(3);
-            XmlNode xn_FirstLayerRelativeHeight = xnl_ShelfConfig.Item(4);
-            XmlNode xn_SecondLayerRelativeHeight = xnl_ShelfConfig.Item(5);
-            XmlNode xn_ThirdLayerRelativeHeight = xnl_ShelfConfig.Item(6);
-            XmlNode xn_FourthLayerRelativeHeight = xnl_ShelfConfig.Item(7);
-            XmlNode xn_FifthLayerRelativeHeight = xnl_ShelfConfig.Item(8);
-            XmlNode xn_SixthLayerRelativeHeight = xnl_ShelfConfig.Item(9);
-            XmlNode xn_DistanceToBookshelf = xnl_ShelfConfig.Item(10);
+            //XmlNodeList xnl_ShelfConfig = xmlDoc.SelectSingleNode("UserConfig").ChildNodes.Item(2).ChildNodes;
+            //XmlNode xn_LayerCount = xnl_ShelfConfig.Item(0);
+            //XmlNode xn_LifterHeightOffset = xnl_ShelfConfig.Item(1);
+            //XmlNode xn_BottomLifterBaseHeight = xnl_ShelfConfig.Item(2);
+            //XmlNode xn_UpperLifterBaseHeight = xnl_ShelfConfig.Item(3);
+            //XmlNode xn_FirstLayerRelativeHeight = xnl_ShelfConfig.Item(4);
+            //XmlNode xn_SecondLayerRelativeHeight = xnl_ShelfConfig.Item(5);
+            //XmlNode xn_ThirdLayerRelativeHeight = xnl_ShelfConfig.Item(6);
+            //XmlNode xn_FourthLayerRelativeHeight = xnl_ShelfConfig.Item(7);
+            //XmlNode xn_FifthLayerRelativeHeight = xnl_ShelfConfig.Item(8);
+            //XmlNode xn_SixthLayerRelativeHeight = xnl_ShelfConfig.Item(9);
+            //XmlNode xn_DistanceToBookshelf = xnl_ShelfConfig.Item(10);
 
             XmlNodeList xnl_OtherConfig = xmlDoc.SelectSingleNode("UserConfig").ChildNodes.Item(3).ChildNodes;
             XmlNode xn_FloorDefaultSelectedIndex = xnl_OtherConfig.Item(0);
@@ -284,17 +357,17 @@ namespace LibRobotAuto.Common
             xn_BottomReaderEnable.InnerText = BottomReaderEnable.ToString();
 
             // Save shelf config
-            xn_LayerCount.InnerText = LayerCount.ToString();
-            xn_LifterHeightOffset.InnerText = LifterHeightOffset.ToString();
-            xn_BottomLifterBaseHeight.InnerText = BottomLifterBaseHeight.ToString();
-            xn_UpperLifterBaseHeight.InnerText = UpperLifterBaseHeight.ToString();
-            xn_FirstLayerRelativeHeight.InnerText = FirstLayerRelativeHeight.ToString();
-            xn_SecondLayerRelativeHeight.InnerText = SecondLayerRelativeHeight.ToString();
-            xn_ThirdLayerRelativeHeight.InnerText = ThirdLayerRelativeHeight.ToString();
-            xn_FourthLayerRelativeHeight.InnerText = FourthLayerRelativeHeight.ToString();
-            xn_FifthLayerRelativeHeight.InnerText = FifthLayerRelativeHeight.ToString();
-            xn_SixthLayerRelativeHeight.InnerText = SixthLayerRelativeHeight.ToString();
-            xn_DistanceToBookshelf.InnerText = DistanceToBookshelf.ToString();
+            //xn_LayerCount.InnerText = LayerCount.ToString();
+            //xn_LifterHeightOffset.InnerText = LifterHeightOffset.ToString();
+            //xn_BottomLifterBaseHeight.InnerText = BottomLifterBaseHeight.ToString();
+            //xn_UpperLifterBaseHeight.InnerText = UpperLifterBaseHeight.ToString();
+            //xn_FirstLayerRelativeHeight.InnerText = FirstLayerRelativeHeight.ToString();
+            //xn_SecondLayerRelativeHeight.InnerText = SecondLayerRelativeHeight.ToString();
+            //xn_ThirdLayerRelativeHeight.InnerText = ThirdLayerRelativeHeight.ToString();
+            //xn_FourthLayerRelativeHeight.InnerText = FourthLayerRelativeHeight.ToString();
+            //xn_FifthLayerRelativeHeight.InnerText = FifthLayerRelativeHeight.ToString();
+            //xn_SixthLayerRelativeHeight.InnerText = SixthLayerRelativeHeight.ToString();
+            //xn_DistanceToBookshelf.InnerText = DistanceToBookshelf.ToString();
 
             // Save other config
             xn_FloorDefaultSelectedIndex.InnerText = FloorDefaultSelectedIndex.ToString();

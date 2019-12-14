@@ -98,7 +98,14 @@ namespace LibRobotAuto.Module
             settings.Report.IncludePeakRssi = true;
             settings.Report.IncludePhaseAngle = false;
             settings.Report.IncludeFirstSeenTime = true;
-            settings.Report.IncludeFastId = true;
+            if (UserConfig.ReaderMode.Equals("EPC"))
+            {
+                settings.Report.IncludeFastId = false;
+            }
+            else
+            {
+                settings.Report.IncludeFastId = true;
+            }
             settings.Report.IncludeAntennaPortNumber = true;
             //settings.Report.IncludeChannel = true;
             settings.Report.Mode = ReportMode.Individual;
@@ -110,11 +117,11 @@ namespace LibRobotAuto.Module
 
             if (hostname.Equals(UserConfig.UpperReaderHostname))
             {
-                //settings.TxFrequenciesInMhz.Add(920.625);
+                settings.TxFrequenciesInMhz.Add(920.625);
                 //settings.TxFrequenciesInMhz.Add(920.875);
                 //settings.TxFrequenciesInMhz.Add(921.125);
                 //settings.TxFrequenciesInMhz.Add(921.375);
-                settings.TxFrequenciesInMhz.Add(921.625);
+                //settings.TxFrequenciesInMhz.Add(921.625);
                 //settings.TxFrequenciesInMhz.Add(921.875);
             }
             else
@@ -122,10 +129,10 @@ namespace LibRobotAuto.Module
                 //settings.TxFrequenciesInMhz.Add(920.625);
                 //settings.TxFrequenciesInMhz.Add(923.125);
                 //settings.TxFrequenciesInMhz.Add(923.375);
-                settings.TxFrequenciesInMhz.Add(923.625);
+                //settings.TxFrequenciesInMhz.Add(923.625);
                 //settings.TxFrequenciesInMhz.Add(923.875);
                 //settings.TxFrequenciesInMhz.Add(924.125);
-                //settings.TxFrequenciesInMhz.Add(924.375);
+                settings.TxFrequenciesInMhz.Add(924.375);
             }
 
             // 天线
@@ -239,7 +246,14 @@ namespace LibRobotAuto.Module
             RawTagInfo temp = new RawTagInfo();
 
             temp.time = tag.FirstSeenTime.Utc;
-            temp.epc = tag.Tid.ToHexString();
+            if (UserConfig.ReaderMode.Equals("EPC"))
+            {
+                temp.epc = tag.Epc.ToHexString();
+            }
+            else
+            {
+                temp.epc = tag.Tid.ToHexString();
+            }
             temp.rssi = tag.PeakRssiInDbm;
             temp.antennaPortNum = tag.AntennaPortNumber;
 

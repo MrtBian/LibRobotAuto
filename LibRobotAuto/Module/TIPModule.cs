@@ -25,6 +25,13 @@ namespace LibRobotAuto.Module
 
         public void SaveRawTagsToFile(List<RawTagInfo> rawTagsFromReader, LibraryRouteLine line, int scanLayer, string scanFloor, string realShelfType)
         {
+            int layerCount = UserConfig.GetLayerCount(line.startPoint.PositionNo);
+            scanLayer = layerCount - scanLayer;
+            if (scanLayer < 0)
+            {
+                // Remove Data from useless scanning
+                return;
+            }
             string path = UserConfig.inventoryDatafilePath + "\\" + 
                           scanFloor + "_" + 
                           line.startPoint.PositionNo.Substring(0, 3) + "_" +

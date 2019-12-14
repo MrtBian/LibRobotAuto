@@ -175,6 +175,8 @@ namespace LibRobotAuto.Module
             //Adjust height of lift
             ushort upperScannerHeight;
             ushort bottomScannerHeight;
+            //Adjust height of lift according startPoint
+            UserConfig.SetAbsoluteHeight(startPoint.PositionNo);
             switch (status)
             {
                 case LiftStatus.HighLevel:
