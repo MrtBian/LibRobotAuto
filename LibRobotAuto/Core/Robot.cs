@@ -210,6 +210,14 @@ namespace LibRobotAuto.Core
                 {
                     return;
                 }
+                mobilePlatform.FallingLifter();
+                int MoveResult = mobilePlatform.MoveToTargetPosition(OriginStation);
+                if(MoveResult == -1)
+                {
+                    MessageBoxResult dr = MessageBox.Show("机器人无法自主回到充电桩，请关机推回充电桩充电",
+                        "警告", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                    return;
+                }
                 mobilePlatform.ExecuteCharge(0);
             }
         }
@@ -325,7 +333,7 @@ namespace LibRobotAuto.Core
 
         /*
          获取整图书馆路线信息，调用上面的analyzeLibarayRouteLine一步一步进行调整
-             */
+        */
         private void LoadFullRoute(string routeFilename)
         {
             Route = new List<LibraryRouteLine>();
@@ -422,7 +430,7 @@ namespace LibRobotAuto.Core
         }
 
         /// <summary>
-        /// Generate an file names "end" to show the inventory is finished.
+        /// Generate an file named "end" to show the inventory is finished.
         /// </summary>
         private void GenerateInventoryEndfile()
         {
@@ -670,16 +678,16 @@ namespace LibRobotAuto.Core
                 else if (line.lineType == MapLineType.Charge)
                 {
                     //回到初始点0000
-                    MyRobotPosition s = new MyRobotPosition();
-                    MyRobotPosition e = new MyRobotPosition();
-                    s.PositionNo = "0000";
-                    s.Position = new RobotPosition();
-                    e.PositionNo = "0000";
-                    e.Position = new RobotPosition();
-                    MapPositions.TryGetValue("0000", out s.Position);
-                    MapPositions.TryGetValue("0000", out e.Position);
-                    ExecuteMoveCommand(s, e, ref isSkipToNextShelf);
+                    //MyRobotPosition s = new MyRobotPosition();
+                    //MyRobotPosition e = new MyRobotPosition();
+                    //s.PositionNo = "0000";
+                    //s.Position = new RobotPosition();
+                    //e.PositionNo = "0000";
+                    //e.Position = new RobotPosition();
+                    //MapPositions.TryGetValue("0000", out s.Position);
+                    //MapPositions.TryGetValue("0000", out e.Position);
                     mobilePlatform.FallingLifter();
+                    ExecuteMoveCommand(OriginStation, OriginStation, ref isSkipToNextShelf);
                     int chargeTime = Convert.ToInt32(line.startPoint.PositionNo);
                     mobilePlatform.ExecuteCharge(chargeTime);
                 }

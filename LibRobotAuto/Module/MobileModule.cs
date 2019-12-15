@@ -180,6 +180,7 @@ namespace LibRobotAuto.Module
             switch (status)
             {
                 case LiftStatus.HighLevel:
+                    Trace.TraceInformation("Height:" + UserConfig.FirstLayerAbsoluteHeight + " " + UserConfig.FourthLayerAbsoluteHeight);
                     upperScannerHeight = UserConfig.FirstLayerAbsoluteHeight;
                     bottomScannerHeight = UserConfig.FourthLayerAbsoluteHeight;
                     break;
@@ -286,7 +287,6 @@ namespace LibRobotAuto.Module
 
             Trace.TraceInformation("execute charging.");
             OccupyMobileCar();
-
             for (int i = 0; i < UserConfig.autoChargingTryCounts; i++)
             {
                 mobileCar.basicOperation.StartCharge();

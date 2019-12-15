@@ -27,7 +27,7 @@ namespace LibRobotAuto.Module
         {
             int layerCount = UserConfig.GetLayerCount(line.startPoint.PositionNo);
             scanLayer = layerCount - scanLayer;
-            if (scanLayer < 0)
+            if (scanLayer < 1)
             {
                 // Remove Data from useless scanning
                 return;

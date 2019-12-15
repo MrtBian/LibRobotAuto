@@ -142,10 +142,10 @@ namespace LibRobotAuto.Common
                 {
                     string regexp = xnl.Item(i).Attributes["regexp"].Value;
                     Dictionary<string, ushort> shelfconfig = new Dictionary<string, ushort>();
-                    XmlNode xn2 = xn1.SelectSingleNode("ShelfConfig");
+                    XmlNode xn2 = xnl.Item(i);
                     XmlNodeList xnl2 = xn2.ChildNodes;
                     int NumOfShelfConfig = xnl2.Count;
-                    for (int j = 0; j < NumOfShelvesConfig; j++)
+                    for (int j = 0; j < NumOfShelfConfig; j++)
                     {
                         string name = xnl2.Item(j).Name;
                         ushort value = Convert.ToUInt16(xnl2.Item(j).InnerText.ToString());
